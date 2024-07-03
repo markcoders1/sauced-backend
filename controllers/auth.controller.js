@@ -1,5 +1,5 @@
 const { sign } = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -60,6 +60,8 @@ const login = async (req, res) => {
         res.status(400).send({ message: error.message });
     }
 };
+
+
 
 module.exports = {
     login,
