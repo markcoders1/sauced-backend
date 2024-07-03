@@ -11,7 +11,7 @@ const signup = async (req, res) => {
             return res.status(400).send({ message: "User already exists" });
         if (!req.body.email || !req.body.password || !req.body.fullName)
             return res.status(400).send({ message: "Missing parameters" });
-        const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(Number(process.env.BCRYPT_SALT));
         const hashPassword = await bcrypt.hash(
             req.body.password.toString(),
             salt

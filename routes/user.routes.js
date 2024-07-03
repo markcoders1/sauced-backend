@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 
-router.post("/change-name",authMiddleware ,changeName)
+router.patch("/change-name",authMiddleware ,changeName)
 // router.post("/change-password", changePassword)
 
 module.exports = router;
