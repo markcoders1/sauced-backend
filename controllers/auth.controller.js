@@ -71,18 +71,37 @@ const transporter = nodemailer.createTransport({
     },
   }
 );
-  
+function generateOTP() {
+    const length = 8;
+    let otp = '';
+    for (let i = 0; i < length; i++) {
+        otp += Math.floor(Math.random() * 10);
+    }
+    return otp;
+}
 
 const forgetPassword = async (req,res) => {
     try {
         
         const {email} = req.query
+
+        const user = await User.findOne({ email: email });
+		if (!user) {
+			console.log("User not found");
+			return res.status(400).json({
+				message: `There is no user registered with the email: ${email} `,
+			});
+		}
+        const otp = generateOTP()
+        console.log("generated otp is: ", otp);
+        user.remember_token = otp
+        await user.save()
         console.log(`Trying to send email to ${email}`);
         const theEmail  = {
             from : process.env.APP_EMAIL,
             to:  email,
             subject:  "reset password",
-            text: "You tried to reset your password \n Please click the link below \n "
+            text: `Your password reset code is: ${user.remember_token}`
           }
         await transporter.sendMail(theEmail, (error) => {
 		if (error) return res.status(400).json({ "Email not sent": error });
