@@ -15,8 +15,8 @@ app.get("/", (req, res) => {
 });
 
 //routes
-const authRouter = require("./routes/auth.routes.js");
-const router = require("./routes/user.routes.js");
+const authRouter = require("./routes/admin/auth.routes.js");
+const router = require("./routes/user/user.routes.js");
 
 //routes usage
 app.use("/api/auth", authRouter);
