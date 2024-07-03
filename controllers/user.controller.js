@@ -9,7 +9,7 @@ const changeName = async(req, res) => {
         if (req.user.name === newName) {
             return res.status(400).json({message:"Error: Old name and new name are the same."})
         }
-        
+
         const user = await User.findByIdAndUpdate(
             req.user?._id,
             {
@@ -34,6 +34,8 @@ const changeName = async(req, res) => {
         })
     }
 }
+
+
 
 module.exports ={
     changeName,

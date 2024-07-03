@@ -2,6 +2,7 @@ const { sign } = require("jsonwebtoken");
 const User = require("../models/user.model.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 //signup
 const signup = async (req, res) => {
@@ -61,9 +62,41 @@ const login = async (req, res) => {
     }
 };
 
+const transporter = nodemailer.createTransport({
+    service: "Gmail",
+  
+    auth: {
+      user: process.env.APP_EMAIL,
+      pass: process.env.APP_PASS,
+    },
+  }
+);
+  
+
+const forgetPassword = async (req,res) => {
+    try {
+        
+        const {email} = req.query
+        console.log(`Trying to send email to ${email}`);
+        const theEmail  = {
+            from : process.env.APP_EMAIL,
+            to:  email,
+            subject:  "reset password",
+            text: "You tried to reset your password \n Please click the link below \n "
+          }
+        await transporter.sendMail(theEmail, (error) => {
+		if (error) return res.status(400).json({ "Email not sent": error });
+    });
+        return res.status(200).json({message:"Email sent Successfully"})
+    } catch (error) {
+        return res.status(400).json({message: "Something went wrong in forget password", error})
+    }
+}
+
 
 
 module.exports = {
     login,
     signup,
+    forgetPassword
 };
