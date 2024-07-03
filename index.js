@@ -15,10 +15,14 @@ app.get("/", (req, res) => {
 });
 
 //routes
-const authRouter = require("./routes/authRoutes");
+const authRouter = require("./routes/auth.routes.js");
+const router = require("./routes/user.routes.js");
 
 //routes usage
-app.use("/api", authRouter);
+app.use("/api/auth", authRouter);
+app.use("/api", router )
+
+app.use("*",(req,res)=>res.status(404).json({error:"route not found",code:404}))
 
 //server connection
 app.listen(port, () => {
