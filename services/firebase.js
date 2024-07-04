@@ -1,7 +1,15 @@
-var admin = require("firebase-admin");
-
+const admin = require("firebase-admin");
 var serviceAccount = require("../sauced-firebase.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+let initialized = false;
+function initializeAdmin() {
+  if (!initialized) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+    initialized = true;
+  }
+  return admin;
+}
+module.exports = {
+  initializeAdmin,
+};
