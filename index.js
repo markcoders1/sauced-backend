@@ -15,14 +15,24 @@ app.get("/", (req, res) => {
 });
 
 //routes
-const authRouter = require("./routes/admin/auth.routes.js");
-const router = require("./routes/user/profile.routes.js");
+//User Routes
+const profileRouter = require("./routes/user/profile.routes.js");
+const authRouter = require("./routes/user/auth.routes.js");
+
+//Admin Routes
+const adminAuthRouter = require("./routes/admin/auth.routes.js");
 
 //routes usage
-app.use("/api/auth", authRouter);
-app.use("/api", router )
+//admin
+app.use("/api/auth", adminAuthRouter);
 
-app.use("*",(req,res)=>res.status(404).json({error:"route not found",code:404}))
+//user
+app.use("/api", profileRouter);
+app.use("/api/auth", authRouter);
+
+app.use("*", (req, res) =>
+    res.status(404).json({ error: "route not found", code: 404 })
+);
 
 //server connection
 app.listen(port, () => {
