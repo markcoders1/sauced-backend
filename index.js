@@ -14,6 +14,9 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
+// very important for file uploads
+app.use("/uploads", express.static("uploads"));
+
 //routes
 //User Routes
 const profileRouter = require("./routes/user/profile.routes.js");

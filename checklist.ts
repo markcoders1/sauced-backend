@@ -5,3 +5,5 @@
 // setup multer middleware  
 // upload profile picture API 
 // firebase auth
+// edit editprofile
+// change password

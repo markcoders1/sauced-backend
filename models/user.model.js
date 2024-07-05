@@ -41,6 +41,10 @@ const UserSchema = mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    image:{
+        type:String,
+        default:"https://markcoders-assets.s3.amazonaws.com/user.png"
+    }
 });
 
 module.exports = mongoose.model("users", UserSchema);
