@@ -1,9 +1,8 @@
 //ToDo
 // Done Name change API
-// DONe Password Change API
+// Done forget password API
 // Done email for password change with link
-// setup multer middleware  
-// upload profile picture API 
-// firebase auth
-// edit editprofile
-// change password
+// Done setup multer middleware  
+// Done changeImage API 
+// Done firebase auth
+// change password API
