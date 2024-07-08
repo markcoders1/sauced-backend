@@ -25,6 +25,9 @@ const firebaseAuth = async (req, res) => {
         let user = await User.findOne({
             email: userData.email || userData.providerData[0].email,
         });
+        if (user.status != "active") {
+            return res.status(400).json({message:"Error: User status is no longer active, please contact management."})
+        }
         if (!user) {
             console.log({ body: req.body });
             user = new User({
