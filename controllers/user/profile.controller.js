@@ -3,6 +3,7 @@ const baseUrl = process.env.SERVER_BASE_URL || "/";
 const fs = require("fs")
 
 const changeName = async(req, res) => {
+    //update logged in user's name
     try {
         let {newName} = req.body
         if (!newName) {
@@ -33,9 +34,10 @@ const changeName = async(req, res) => {
             error
         })
     }
-}
+};
 
 const changeImage = async (req, res) => {
+    //upload image and overwrites user's previous image
     try {
         if (!req.file) {
             console.log("Image not found");
@@ -57,10 +59,37 @@ const changeImage = async (req, res) => {
             error
         })
     }
-}
+};
 
+const deleteUser = async(req,res) => {
+    //set logged in user's status to inactive
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.user?._id,
+            {
+                $set: {
+                    status: "inactive"
+                },
+            },
+            { new: true }
+        ).select("-password");
+
+		return res.status(200).json({
+			message: "User Deleted Successfully",
+			user,
+		});
+    } catch (error) {
+        console.log(error);
+        return res
+        .status(400)
+        .json({message: "Something went wrong while Deleting user",
+            error,
+        })
+    }
+};
 
 module.exports ={
     changeName,
-    changeImage
+    changeImage,
+    deleteUser
 };
