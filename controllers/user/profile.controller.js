@@ -1,3 +1,5 @@
+const { STATUS_CODES } = require("http");
+const Sauce = require("../../models/sauce.model.js");
 const User = require("../../models/user.model.js");
 const baseUrl = process.env.SERVER_BASE_URL || "/";
 const fs = require("fs")
@@ -61,7 +63,7 @@ const changeImage = async (req, res) => {
     }
 };
 
-const deleteUser = async(req,res) => {
+const deleteUser = async (req,res) => {
     //set logged in user's status to inactive
     try {
         const user = await User.findByIdAndUpdate(
@@ -88,8 +90,36 @@ const deleteUser = async(req,res) => {
     }
 };
 
+const addSauce = async (req,res) => {
+    try {
+        if (!req.body.name) {
+            return res.status(400).json({message:"Sauce name is required"})
+        }
+        const user = await User.findOne({ email: req.user.email });
+        const sauce = await Sauce.create({
+            name: req.body.name,
+            type : req.body?.type,
+            owner : user._id,
+            description : req.body?.description
+        }) 
+        
+		return res.status(200).json({
+			message: "Sauce Added Successfully",
+			sauce,
+		});
+    } catch (error) {
+        console.log(error);
+        return res
+        .status(400)
+        .json({message: "Something went wrong while Adding Sauce",
+            error,
+        })
+    }
+};
+
 module.exports ={
     changeName,
     changeImage,
-    deleteUser
+    deleteUser,
+    addSauce,
 };

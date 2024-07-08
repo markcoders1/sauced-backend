@@ -15,7 +15,7 @@
 //  4 profile
 // location
 // make sauce model //Done
-// delete account API -> make account inactive
+// delete account API -> make account inactive //Done
 
 
 

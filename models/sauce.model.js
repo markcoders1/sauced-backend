@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
+const { Schema } = require("mongoose");
 const SauceSchema = mongoose.Schema({
-    uid: {
-        type: String,
-        required: true,
-    },
+    // uid: {
+    //     type: String,
+    //     required: true,
+    // },
     name: {
         type: String,
         required: true,
@@ -13,6 +14,11 @@ const SauceSchema = mongoose.Schema({
     },
     description: {
         type:String
+    },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "users",
+        required: true
     },
     date: {
         type: Date,
