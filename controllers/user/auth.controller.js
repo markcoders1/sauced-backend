@@ -6,6 +6,7 @@ const User = require("../../models/user.model.js");
 const { initializeAdmin } = require("../../services/firebase.js");
 const admin = initializeAdmin();
 const jwt = require("jsonwebtoken");
+const defaultPhoto = "https://markcoders-assets.s3.amazonaws.com/user.png";
 
 //Firebase authentication
 const firebaseAuth = async (req, res) => {
@@ -16,7 +17,7 @@ const firebaseAuth = async (req, res) => {
                 .send({ message: "Access token is required" });
         const idToken = req.body.accessToken;
         const decodedToken = await admin.auth().verifyIdToken(idToken);
-        console.log("Decoded Token : ",decodedToken);
+        console.log("Decoded Token : ", decodedToken);
         const uid = decodedToken.uid;
         console.log("User authenticated with Firebase UID:", uid);
         console.log("AUTH_TOKEN", req.body.accessToken);
@@ -35,7 +36,8 @@ const firebaseAuth = async (req, res) => {
                 provider:
                     req.body?.provider ?? userData.providerData[0].providerId,
                 status: "active",
-                welcome:true
+                welcome: true,
+                image: userData?.providerData[0]?.photoURL ?? defaultPhoto,
             });
             console.log(user._doc);
             const newUser = await user.save();
