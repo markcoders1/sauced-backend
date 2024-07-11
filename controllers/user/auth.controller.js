@@ -22,7 +22,7 @@ const firebaseAuth = async (req, res) => {
         console.log("AUTH_TOKEN", req.body.accessToken);
         let userData = await admin.auth().getUser(uid);
         userData = JSON.parse(JSON.stringify(userData));
-        console.log(" U S E R - D A T A : ",userData);
+        console.log(userData);
         let user = await User.findOne({
             email: userData.email || userData.providerData[0].email,
         });
@@ -37,7 +37,7 @@ const firebaseAuth = async (req, res) => {
                 status: "active",
                 welcome:true
             });
-            console.log(" U S E R - D O C : ",user._doc);
+            console.log(user._doc);
             const newUser = await user.save();
             const token = jwt.sign(
                 { _id: newUser._id },
