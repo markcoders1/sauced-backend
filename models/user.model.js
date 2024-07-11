@@ -48,6 +48,10 @@ const UserSchema = mongoose.Schema({
     welcome:{
         type:Boolean,
         default: true
+    },
+    points:{
+        type: Number,
+        default:0
     }
 });
 

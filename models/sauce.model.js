@@ -19,6 +19,10 @@ const SauceSchema = mongoose.Schema({
     description: {
         type:String
     },
+    ingredients:{
+        type:Array,
+        default:[]
+    },
     owner: {
         type: Schema.Types.ObjectId,
         ref: "users",
@@ -30,7 +34,22 @@ const SauceSchema = mongoose.Schema({
     },
     image:{
         type:String,
+    },
+    likedBy:{
+        type:Array,
+        default: []
+    },
+    checkIn:{
+        type:Number,
+        default:0
+    },
+    websiteLink:{
+        type:String,
+    },
+    productLink:{
+        type:String,
     }
+
 });
 
 module.exports = mongoose.model("sauces", SauceSchema);

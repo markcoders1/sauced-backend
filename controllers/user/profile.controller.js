@@ -128,6 +128,18 @@ const reactivateUser = async (req, res) => {
 	}
 };
 
+const getUser = async (req,res) => {
+    try {
+        const user = await User.findOne({ email: req.body.email });
+        return res.status(200).send(user)
+    } catch (error) {
+        res.status(500).json({
+			message: "Something went wrong while getting user details",
+			error,
+		});
+    }
+}
+
 
 const addSauce = async (req,res) => {
     try {
@@ -138,7 +150,7 @@ const addSauce = async (req,res) => {
         const sauce = await Sauce.create({
             name: req.body.name,
             type : req.body?.type,
-            owner : user._id,
+            owner : user.id,
             description : req.body?.description
         }) 
         
@@ -158,6 +170,7 @@ const addSauce = async (req,res) => {
 
 const welcome1 = async (req,res) =>{
     try {
+        // return user's welcome boolean
         const welcome = req.user.welcome
         return res.status(200).json({welcome})
 
@@ -173,6 +186,7 @@ const welcome1 = async (req,res) =>{
 
 const welcome2 = async (req,res) =>{
     try {
+        // update user's welcome boolean to false
         const user = await User.findByIdAndUpdate(
             req.user?._id,
             {
@@ -196,6 +210,31 @@ const welcome2 = async (req,res) =>{
     }
 }
 
+const follow = async (req, res) => {
+    try {
+        // a user can follow another user 
+
+    } catch (error) {
+        
+    }
+};
+
+const getFollowers = async(req,res) => {
+    try {
+        // return list of users that follow current user 
+    } catch (error) {
+        
+    }
+};
+
+const getFollowing = async (req, res) => {
+    try {
+        // get list of users that current user is following
+    } catch (error) {
+        
+    }
+};
+
 module.exports ={
     changeName,
     changeImage,
@@ -204,5 +243,8 @@ module.exports ={
     addSauce,
     welcome1,
     welcome2,
-
+    getUser,
+    follow,
+    getFollowers,
+    getFollowing
 };
