@@ -5,6 +5,10 @@
 // Done setup multer middleware  
 // Done changeImage API 
 // Done firebase auth
+// DOne Welcome APIs
+// Done Delete account API => make account inactive
+// Done Sauce Model
+
 
 //ToDo
 
@@ -14,11 +18,10 @@
 //  3 award
 //  4 profile
 // location
-// make sauce model //Done
-// delete account API -> make account inactive //Done
-// welcome true or false
 // firebase login status check 
-
+// an APi that returns trending hot sauces, comapny name, sauce name, 
+//  
+//
 
 
 

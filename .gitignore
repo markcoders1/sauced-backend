@@ -3,3 +3,4 @@ package-lock.json
 node_modules
 sauced-firebase.json
 uploads/
+checklist.ts

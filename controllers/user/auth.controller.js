@@ -16,18 +16,16 @@ const firebaseAuth = async (req, res) => {
                 .send({ message: "Access token is required" });
         const idToken = req.body.accessToken;
         const decodedToken = await admin.auth().verifyIdToken(idToken);
+        console.log("Decoded Token : ",decodedToken);
         const uid = decodedToken.uid;
         console.log("User authenticated with Firebase UID:", uid);
         console.log("AUTH_TOKEN", req.body.accessToken);
         let userData = await admin.auth().getUser(uid);
         userData = JSON.parse(JSON.stringify(userData));
-        console.log(userData);
+        console.log(" U S E R - D A T A : ",userData);
         let user = await User.findOne({
             email: userData.email || userData.providerData[0].email,
         });
-        if (user.status != "active") {
-            return res.status(400).json({message:"User status is no longer active, please contact management."})
-        }
         if (!user) {
             console.log({ body: req.body });
             user = new User({
@@ -36,8 +34,10 @@ const firebaseAuth = async (req, res) => {
                 name: req.body?.name ?? userData.displayName,
                 provider:
                     req.body?.provider ?? userData.providerData[0].providerId,
+                status: "active",
+                welcome:true
             });
-            console.log(user._doc);
+            console.log(" U S E R - D O C : ",user._doc);
             const newUser = await user.save();
             const token = jwt.sign(
                 { _id: newUser._id },

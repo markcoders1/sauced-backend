@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.patch("/change-name", authMiddleware, changeName);
 router.post("/change-image",authMiddleware, upload.single("image"), changeImage);
-router.patch("/delete-user", authMiddleware, deleteUser);
+router.post("/delete-user", authMiddleware, deleteUser);
 router.post("/add-sauce", authMiddleware, addSauce);
 router.get("/welcome", authMiddleware ,welcome1)
 router.post("/welcome", authMiddleware, welcome2)

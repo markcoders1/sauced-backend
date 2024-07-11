@@ -2,7 +2,9 @@ const { STATUS_CODES } = require("http");
 const Sauce = require("../../models/sauce.model.js");
 const User = require("../../models/user.model.js");
 const baseUrl = process.env.SERVER_BASE_URL || "/";
-const fs = require("fs")
+const fs = require("fs");
+const { initializeAdmin } = require("../../services/firebase.js");
+const admin = initializeAdmin();
 
 const changeName = async(req, res) => {
     //update logged in user's name
@@ -22,7 +24,7 @@ const changeName = async(req, res) => {
                 },
             },
             { new: true }
-        ).select("-password");
+        );
 
 		return res.status(200).json({
 			message: "User Name Changed Successfully",
@@ -63,32 +65,50 @@ const changeImage = async (req, res) => {
     }
 };
 
-const deleteUser = async (req,res) => {
-    //set logged in user's status to inactive
-    try {
-        const user = await User.findByIdAndUpdate(
-            req.user?._id,
-            {
-                $set: {
-                    status: "inactive"
-                },
-            },
-            { new: true }
-        ).select("-password");
+// const deleteUser = async (req,res) => {
+//     //set logged in user's status to inactive
+//     try {
+//         const user = await User.findByIdAndUpdate(
+//             req.user?._id,
+//             {
+//                 $set: {
+//                     status: "inactive"
+//                 },
+//             },
+//             { new: true }
+//         );
 
-		return res.status(200).json({
-			message: "User Deleted Successfully",
-			user,
-		});
+// 		return res.status(200).json({
+// 			message: "User Deleted Successfully",
+// 			user,
+// 		});
+//     } catch (error) {
+//         console.log(error);
+//         return res
+//         .status(400)
+//         .json({message: "Something went wrong while Deleting user",
+//             error,
+//         })
+//     }
+// };
+
+const deleteUser = async (req, res) => {
+    try {
+      const user = await User.findOne({ email:req.user.email });
+      if (!user) return res.status(404).send({ message: "User not found." });
+      const disabled = await admin
+        .auth()
+        .updateUser(user.uid, { disabled: true });
+      user.status = "inactive";
+      await user.save()
+      res.status(200).send({ message: "User has been deleted.", disabled });
     } catch (error) {
-        console.log(error);
-        return res
-        .status(400)
-        .json({message: "Something went wrong while Deleting user",
-            error,
-        })
+      console.log(error);
+      return res.status(400).json({message: "Something went wrong while Deleting user",
+        error,
+    });
     }
-};
+  };
 
 const addSauce = async (req,res) => {
     try {
@@ -142,7 +162,7 @@ const welcome2 = async (req,res) =>{
                 },
             },
             { new: true }
-        ).select("-password");
+        )
         user.save()
         const welcome = user.welcome
         return res.status(200).json({welcome});
