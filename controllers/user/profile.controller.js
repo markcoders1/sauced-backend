@@ -117,9 +117,52 @@ const addSauce = async (req,res) => {
     }
 };
 
+const welcome1 = async (req,res) =>{
+    try {
+        const welcome = req.user.welcome
+        return res.status(200).json({welcome})
+
+    } catch (error) {
+        console.log(error);
+        return res
+        .status(400)
+        .json({message: "Something went wrong while showing welcome message",
+            error,
+        })
+    }
+}
+
+const welcome2 = async (req,res) =>{
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.user?._id,
+            {
+                $set: {
+                    welcome: false
+                },
+            },
+            { new: true }
+        ).select("-password");
+        user.save()
+        const welcome = user.welcome
+        return res.status(200).json({welcome});
+
+    } catch (error) {
+        console.log(error);
+        return res
+        .status(400)
+        .json({message: "Something went wrong while updating welcome boolean",
+            error,
+        })
+    }
+}
+
 module.exports ={
     changeName,
     changeImage,
     deleteUser,
     addSauce,
+    welcome1,
+    welcome2,
+
 };

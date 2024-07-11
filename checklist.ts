@@ -16,6 +16,8 @@
 // location
 // make sauce model //Done
 // delete account API -> make account inactive //Done
+// welcome true or false
+// firebase login status check 
 
 
 

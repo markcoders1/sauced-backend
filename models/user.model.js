@@ -44,6 +44,10 @@ const UserSchema = mongoose.Schema({
     image:{
         type:String,
         default:"https://markcoders-assets.s3.amazonaws.com/user.png"
+    },
+    welcome:{
+        type:Boolean,
+        default: true
     }
 });
 

@@ -4,6 +4,8 @@ const {
 	changeImage,
 	deleteUser,
 	addSauce,
+	welcome1,
+	welcome2,
 } = require("../../controllers/user/profile.controller.js");
 const authMiddleware = require("../../middlewares/auth.middleware.js");
 const { upload } = require("../../middlewares/multer.middleware.js");
@@ -15,5 +17,7 @@ router.patch("/change-name", authMiddleware, changeName);
 router.post("/change-image",authMiddleware, upload.single("image"), changeImage);
 router.patch("/delete-user", authMiddleware, deleteUser);
 router.post("/add-sauce", authMiddleware, addSauce);
+router.get("/welcome", authMiddleware ,welcome1)
+router.post("/welcome", authMiddleware, welcome2)
 
 module.exports = router;
