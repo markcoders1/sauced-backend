@@ -20,7 +20,7 @@
 // location
 // firebase login status check 
 // an APi that returns trending hot sauces, comapny name, sauce name, 
-//  
+// users should be able to add reviews
 //
 
 

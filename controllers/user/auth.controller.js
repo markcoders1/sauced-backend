@@ -1,7 +1,3 @@
-// frontend se token milega
-// decode karenge firebase k through
-// decoded database me save karaenge
-// user ni hwa to add karenge signup bhi hp gya
 const User = require("../../models/user.model.js");
 const { initializeAdmin } = require("../../services/firebase.js");
 const admin = initializeAdmin();
