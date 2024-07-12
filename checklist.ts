@@ -9,7 +9,7 @@
 // Done Delete account API => make account inactive
 // Done Sauce Model
 // Done follow , getFollowers, getFollowing
-// 
+// Done getUser with followers and following count
 
 
 //ToDo
@@ -22,7 +22,7 @@
 // location
 // an APi that returns trending hot sauces, comapny name, sauce name, 
 // users should be able to add reviews
-//
+// get randomly 5 users as suggestion to follow
 
 
 
