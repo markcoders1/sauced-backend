@@ -1,6 +1,7 @@
 const { STATUS_CODES } = require("http");
 const Sauce = require("../../models/sauce.model.js");
 const User = require("../../models/user.model.js");
+const Follow = require("../../models/follow.model.js");
 const baseUrl = process.env.SERVER_BASE_URL || "/";
 const fs = require("fs");
 const { initializeAdmin } = require("../../services/firebase.js");
@@ -105,11 +106,12 @@ const reactivateUser = async (req, res) => {
 
 const getUser = async (req,res) => {
     try {
-        //return current user
-        //! missing follower count and following count of current user
+        //return current user and his followers count and following count
         const user = await User.findOne({ email: req.user.email });
         console.log(user);
-        return res.status(200).send(user)
+        const following = await Follow.countDocuments({followGiver:user._id});
+        const followers = await Follow.countDocuments({followReciever:user._id});
+        return res.status(200).send({user,following,followers})
     } catch (error) {
         res.status(500).json({
 			message: "Something went wrong while getting user details",

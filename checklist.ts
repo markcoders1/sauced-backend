@@ -8,6 +8,8 @@
 // DOne Welcome APIs
 // Done Delete account API => make account inactive
 // Done Sauce Model
+// Done follow , getFollowers, getFollowing
+// 
 
 
 //ToDo
@@ -18,7 +20,6 @@
 //  3 award
 //  4 profile
 // location
-// firebase login status check 
 // an APi that returns trending hot sauces, comapny name, sauce name, 
 // users should be able to add reviews
 //
