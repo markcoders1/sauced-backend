@@ -1,4 +1,4 @@
-const { STATUS_CODES } = require("http");
+// const { STATUS_CODES } = require("http");
 const Sauce = require("../../models/sauce.model.js");
 const User = require("../../models/user.model.js");
 const Follow = require("../../models/follow.model.js");
@@ -199,9 +199,21 @@ const welcome2 = async (req,res) =>{
 
 const getRandomUsers = async (req,res) => {
     try {
-        
+        //get 10 random users from db
+        const randomUsers = await User.aggregate([
+            {
+                $sample:{size:10}
+            }
+        ])
+        // console.log(randomUsers);
+        return res.status(200).json({message:"Random Users Fetched Successfully",randomUsers})
     } catch (error) {
-        
+        console.log(error);
+        return res
+        .status(400)
+        .json({message: "Something went wrong while getting random users",
+            error,
+        })
     }
 }
 

@@ -24,7 +24,8 @@ router.post("/add-sauce", authMiddleware, addSauce);
 router.get("/welcome", authMiddleware ,welcome1)
 router.post("/welcome", authMiddleware, welcome2)
 router.get("/get-user", authMiddleware, getUser )
-router.get("/get-random-users" ,authMiddleware , getRandomUsers )
+
+router.get("/get-random-users", getRandomUsers )
 
 
 
