@@ -1,5 +1,6 @@
 const User = require("../../models/user.model.js");
 const Follow = require("../../models/follow.model.js");
+const mongoose = require('mongoose');
 
 const follow = async (req, res) => {
 	try {
@@ -7,12 +8,9 @@ const follow = async (req, res) => {
 
 		const followGiver = req.user._id;
 		const followReciever = req.body._id;
-
-		if (!followGiver || !followReciever) {
-			return res
-				.status(400)
-				.json({ message: "need id to follow that user" });
-		}
+        if(!mongoose.isValidObjectId(followReciever)){
+            return res.status(400).json({message:"Invalid follower id"})
+        }
 		const follow = await Follow.create({
 			followGiver: followGiver,
 			followReciever: followReciever,
