@@ -23,6 +23,7 @@
 // an APi that returns trending hot sauces, comapny name, sauce name, 
 // users should be able to add reviews
 // get randomly 5 users as suggestion to follow
+// check if ive already subscribed a user
 
 
 

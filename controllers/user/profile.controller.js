@@ -111,7 +111,13 @@ const getUser = async (req,res) => {
         console.log(user);
         const following = await Follow.countDocuments({followGiver:user._id});
         const followers = await Follow.countDocuments({followReciever:user._id});
-        return res.status(200).send({user,following,followers})
+        return res.status(200).send({
+            user: {
+                // provider,
+                ...user._doc,
+                following,
+                followers,
+            }})
     } catch (error) {
         res.status(500).json({
 			message: "Something went wrong while getting user details",
