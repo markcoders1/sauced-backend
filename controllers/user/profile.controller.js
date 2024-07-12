@@ -65,35 +65,9 @@ const changeImage = async (req, res) => {
     }
 };
 
-// const deleteUser = async (req,res) => {
-//     //set logged in user's status to inactive
-//     try {
-//         const user = await User.findByIdAndUpdate(
-//             req.user?._id,
-//             {
-//                 $set: {
-//                     status: "inactive"
-//                 },
-//             },
-//             { new: true }
-//         );
-
-// 		return res.status(200).json({
-// 			message: "User Deleted Successfully",
-// 			user,
-// 		});
-//     } catch (error) {
-//         console.log(error);
-//         return res
-//         .status(400)
-//         .json({message: "Something went wrong while Deleting user",
-//             error,
-//         })
-//     }
-// };
-
 const deleteUser = async (req, res) => {
     try {
+        //set logged in user's status to inactive and disable them from firebase as well
       const user = await User.findOne({ email:req.user.email });
       if (!user) return res.status(404).send({ message: "User not found." });
       const disabled = await admin
@@ -112,6 +86,7 @@ const deleteUser = async (req, res) => {
 
 const reactivateUser = async (req, res) => {
 	try {
+        //set logged in user's status to active and undo disable from firebase as well
 		const user = await User.findOne({ email: req.body.email });
 		if (!user) return res.status(404).send({ message: "User not found," });
 		const activate = await admin
@@ -130,7 +105,10 @@ const reactivateUser = async (req, res) => {
 
 const getUser = async (req,res) => {
     try {
-        const user = await User.findOne({ email: req.body.email });
+        //return current user
+        //! missing follower count and following count of current user
+        const user = await User.findOne({ email: req.user.email });
+        console.log(user);
         return res.status(200).send(user)
     } catch (error) {
         res.status(500).json({
@@ -143,6 +121,7 @@ const getUser = async (req,res) => {
 
 const addSauce = async (req,res) => {
     try {
+        // add sauce to db
         if (!req.body.name) {
             return res.status(400).json({message:"Sauce name is required"})
         }
@@ -210,30 +189,13 @@ const welcome2 = async (req,res) =>{
     }
 }
 
-const follow = async (req, res) => {
+const getRandomUsers = async (req,res) => {
     try {
-        // a user can follow another user 
-
+        
     } catch (error) {
         
     }
-};
-
-const getFollowers = async(req,res) => {
-    try {
-        // return list of users that follow current user 
-    } catch (error) {
-        
-    }
-};
-
-const getFollowing = async (req, res) => {
-    try {
-        // get list of users that current user is following
-    } catch (error) {
-        
-    }
-};
+}
 
 module.exports ={
     changeName,
@@ -244,7 +206,5 @@ module.exports ={
     welcome1,
     welcome2,
     getUser,
-    follow,
-    getFollowers,
-    getFollowing
+    getRandomUsers
 };
