@@ -1,5 +1,5 @@
 const User = require("../../models/user.model.js");
-const Follow = require("../../models/follow.model.js");
+const { Follow, Block } = require("../../models/follow.model.js");
 const mongoose = require("mongoose");
 
 const follow = async (req, res) => {
@@ -107,8 +107,53 @@ const getFollowing = async (req, res) => {
 	}
 };
 
+const blockUser = async (req, res) => {
+	try {
+		const userToBlock = req.body?._id;
+		if (!mongoose.isValidObjectId(userToBlock)) {
+			return res.status(400).json({ message: "Invalid user id" });
+		}
+		// Check if a block document for the current user exists
+		let block = await Block.findOne({ userId: req.user._id });
+		if (!block) {
+			// If no block document exists, create a new one
+			block = new Block({
+				userId: req.user._id,
+				blockList: [userToBlock],
+			});
+		} else {
+			//If a block document exists, only add userToBlock if it's not already in the blockList
+			if (!block.blockList.includes(userToBlock)) {
+				block.blockList.push(userToBlock);
+			} else {
+				return res
+					.status(400)
+					.json({ message: "User is already blocked" });
+			}
+		}
+		//populate the details of blocked user 
+		await block.save();
+		const blockData = await Block.findOne({
+			userId: req.user._id,
+		}).populate("blockList");
+		//!missing make user unfollow userToBlock
+		//!missing make userToBlock unfollow user
+		//! finish after unfollowing is done
+		return res
+			.status(200)
+			.json({ message: "user has been blocked Successfully", blockData });
+	} catch (error) {
+		console.log(error);
+		return res.status(400).json({
+			message: "Something went wrong while blocking a user",
+			error,
+		});
+	}
+};
+
 module.exports = {
 	follow,
 	getFollowers,
 	getFollowing,
+	blockUser,
 };

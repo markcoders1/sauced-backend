@@ -1,7 +1,7 @@
 // const { STATUS_CODES } = require("http");
 const Sauce = require("../../models/sauce.model.js");
 const User = require("../../models/user.model.js");
-const Follow = require("../../models/follow.model.js");
+const { Follow, Block } = require("../../models/follow.model.js");
 const baseUrl = process.env.SERVER_BASE_URL || "/";
 const fs = require("fs");
 const { initializeAdmin } = require("../../services/firebase.js");

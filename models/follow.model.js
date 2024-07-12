@@ -13,6 +13,18 @@ const FollowSchema = new Schema({
     }
 }, {timestamps: true})
 
+const BlockSchema = new Schema({
+    userId: {
+        type: Schema.Types.ObjectId, // current user
+        ref: "users"
+    },
+    blockList: [{
+        type: Schema.Types.ObjectId, // blocked users
+        ref: "users"
+    }]
+}, {timestamps: true})
 
-
-module.exports = mongoose.model("follows", FollowSchema);
+module.exports = {
+    Follow: mongoose.model("follows", FollowSchema),
+    Block: mongoose.model("blocks", BlockSchema)
+};
