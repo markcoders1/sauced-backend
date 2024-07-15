@@ -13,6 +13,16 @@ const follow = async (req, res) => {
 				.status(400)
 				.json({ message: "Invalid user id to follow" });
 		}
+		const existingFollow = await Follow.findOne({
+			followGiver: followGiver,
+			followReciever: followReciever,
+		});
+
+		if (existingFollow) {
+			return res
+				.status(400)
+				.json({ message: "User is already followed" });
+		}
 		const follow = await Follow.create({
 			followGiver: followGiver,
 			followReciever: followReciever,
@@ -35,7 +45,7 @@ const unfollow = async (req, res) => {
 		// check if user is already unfollowed
 		// grab the follow document and delete that
 		const userId = req.user._id;
-		const userToUnfollow = req.body._id;
+		const userToUnfollow = req.body?._id;
 		if (!mongoose.isValidObjectId(userToUnfollow)) {
 			return res
 				.status(400)
@@ -47,7 +57,7 @@ const unfollow = async (req, res) => {
 		});
 		if (!unfollow) {
 			return res
-				.status(200)
+				.status(400)
 				.json({ message: "user is already unfollowed " });
 		} else {
 			return res
@@ -147,7 +157,9 @@ const blockUser = async (req, res) => {
 	try {
 		const userToBlock = req.body?._id;
 		if (!mongoose.isValidObjectId(userToBlock)) {
-			return res.status(400).json({ message: "Invalid user id" });
+			return res
+				.status(400)
+				.json({ message: "Invalid user id to block" });
 		}
 		// Check if a block document for the current user exists
 		let block = await Block.findOne({ userId: req.user._id });
@@ -167,14 +179,27 @@ const blockUser = async (req, res) => {
 					.json({ message: "User is already blocked" });
 			}
 		}
-		//populate the details of blocked user
 		await block.save();
+		//populate the details of blocked user
 		const blockData = await Block.findOne({
 			userId: req.user._id,
 		}).populate("blockList");
-		//!missing make user unfollow userToBlock
-		//!missing make userToBlock unfollow user
-		//! finish after unfollowing is done
+		// make user unfollow userToBlock
+		const unfollowHim = await Follow.findOneAndDelete({
+			followGiver: req.user._id,
+			followReciever: userToBlock,
+		});
+		if (unfollowHim) {
+			console.log("Blocked User has been unfollowed");
+		}
+		//make userToBlock unfollow user
+		const makeHimUnfollowUs = await Follow.findOneAndDelete({
+			followGiver: userToBlock,
+			followReciever: req.user._id,
+		});
+		if (makeHimUnfollowUs) {
+			console.log("Blocked User auto unfollowed user ");
+		}
 		return res
 			.status(200)
 			.json({ message: "user has been blocked Successfully", blockData });
