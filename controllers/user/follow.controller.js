@@ -41,18 +41,18 @@ const unfollow = async (req, res) => {
 				.status(400)
 				.json({ message: "Invalid user id to unfollow" });
 		}
-		const result = await Follow.findOneAndDelete({
+		const unfollow = await Follow.findOneAndDelete({
 			followGiver: userId,
 			followReciever: userToUnfollow,
 		});
-		if (!result) {
+		if (!unfollow) {
 			return res
 				.status(200)
 				.json({ message: "user is already unfollowed " });
 		} else {
 			return res
 				.status(200)
-				.json({ message: "user unfollowed Successfully", result });
+				.json({ message: "user unfollowed Successfully", unfollow });
 		}
 	} catch (error) {
 		console.log(error);
