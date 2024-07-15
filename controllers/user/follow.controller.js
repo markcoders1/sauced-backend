@@ -212,10 +212,63 @@ const blockUser = async (req, res) => {
 	}
 };
 
+const unblockUser = async (req, res) => {
+	try {
+		const userToUnblock = req.body?._id;
+		if (!mongoose.isValidObjectId(userToUnblock)) {
+			return res
+				.status(400)
+				.json({ message: "Invalid user id to unblock" });
+		}
+		// Check if a block document for the current user exists
+		let block = await Block.findOne({ userId: req.user._id });
+		if (!block || !block.blockList.includes(userToUnblock)) {
+			return res.status(400).json({ message: "User is not blocked" });
+		}
+		// Remove the user from the blockList
+		block.blockList = block.blockList.filter(
+			(id) => id.toString() !== userToUnblock.toString()
+		);
+		await block.save();
+		// Populate the details of the block document
+		const blockData = await Block.findOne({
+			userId: req.user._id,
+		}).populate("blockList");
+
+		// Optional: Re-establish follow relationships if needed
+		// Uncomment the following lines if you want to re-establish follow relationships
+		// after unblocking (this is usually not required, but added here for completeness)
+
+		// const reFollowHim = new Follow({
+		// 	followGiver: req.user._id,
+		// 	followReciever: userToUnblock,
+		// });
+		// await reFollowHim.save();
+
+		// const reFollowUs = new Follow({
+		// 	followGiver: userToUnblock,
+		// 	followReciever: req.user._id,
+		// });
+		// await reFollowUs.save();
+
+		return res.status(200).json({
+			message: "User has been unblocked successfully",
+			blockData,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(400).json({
+			message: "Something went wrong while unblocking a user",
+			error,
+		});
+	}
+};
+
 module.exports = {
 	follow,
 	getFollowers,
 	getFollowing,
 	blockUser,
 	unfollow,
+	unblockUser,
 };

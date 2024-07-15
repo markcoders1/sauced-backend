@@ -5,6 +5,7 @@ const {
 	getFollowing,
 	blockUser,
 	unfollow,
+	unblockUser,
 } = require("../../controllers/user/follow.controller.js")
 const authMiddleware = require("../../middlewares/auth.middleware.js");
 const router = express.Router();
@@ -15,6 +16,7 @@ router.post("/unfollow", authMiddleware, unfollow)
 router.get("/get-followers" , authMiddleware, getFollowers)
 router.get("/get-following" , authMiddleware, getFollowing)
 router.post("/block", authMiddleware, blockUser)
+router.post("/unblock", authMiddleware, unblockUser)
 
 
 module.exports = router;
