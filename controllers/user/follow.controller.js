@@ -9,7 +9,9 @@ const follow = async (req, res) => {
 		const followGiver = req.user._id;
 		const followReciever = req.body._id;
 		if (!mongoose.isValidObjectId(followReciever)) {
-			return res.status(400).json({ message: "Invalid follower id" });
+			return res
+				.status(400)
+				.json({ message: "Invalid user id to follow" });
 		}
 		const follow = await Follow.create({
 			followGiver: followGiver,
@@ -26,6 +28,40 @@ const follow = async (req, res) => {
 			.json({ message: "Something went wrong while following", error });
 	}
 };
+
+const unfollow = async (req, res) => {
+	try {
+		// check if id is valid of userToUnfollow
+		// check if user is already unfollowed
+		// grab the follow document and delete that
+		const userId = req.user._id;
+		const userToUnfollow = req.body._id;
+		if (!mongoose.isValidObjectId(userToUnfollow)) {
+			return res
+				.status(400)
+				.json({ message: "Invalid user id to unfollow" });
+		}
+		const result = await Follow.findOneAndDelete({
+			followGiver: userId,
+			followReciever: userToUnfollow,
+		});
+		if (!result) {
+			return res
+				.status(200)
+				.json({ message: "user is already unfollowed " });
+		} else {
+			return res
+				.status(200)
+				.json({ message: "user unfollowed Successfully", result });
+		}
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({ message: "something went wrong while unfollowing user" });
+	}
+};
+
 const getFollowers = async (req, res) => {
 	try {
 		// return list of users that follow current user, with their details
@@ -131,7 +167,7 @@ const blockUser = async (req, res) => {
 					.json({ message: "User is already blocked" });
 			}
 		}
-		//populate the details of blocked user 
+		//populate the details of blocked user
 		await block.save();
 		const blockData = await Block.findOne({
 			userId: req.user._id,
@@ -156,4 +192,5 @@ module.exports = {
 	getFollowers,
 	getFollowing,
 	blockUser,
+	unfollow,
 };
