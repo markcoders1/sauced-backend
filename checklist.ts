@@ -23,6 +23,12 @@
 // user can post reviews to sauces and rate from 1 to 5 stars, will these reviews have comments or are comments something entirely separate
 // comments
 
+//Todo ADMIN
+// getAllUsers
+// Get All Sauces
+// delete specific review
+// delete specific comments
+
 
 
 
