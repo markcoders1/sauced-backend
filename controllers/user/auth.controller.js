@@ -1,5 +1,5 @@
 const User = require("../../models/user.model.js");
-const Follow = require("../../models/follow.model.js")
+const {Follow} = require("../../models/follow.model.js")
 const { initializeAdmin } = require("../../services/firebase.js");
 const admin = initializeAdmin();
 const jwt = require("jsonwebtoken");
