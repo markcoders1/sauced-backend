@@ -1,17 +1,21 @@
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
-const SauceSchema = mongoose.Schema({
+
+const SauceSchema = new Schema({
     // uid: {
     //     type: String,
     //     required: true,
     // },
-    brand:{
-        type: String,
-        required: true,
-    },
+    // brand:{
+    //     type: String,
+    //     required: true,
+    // },
     name: {
         type: String,
         required: true,
+    },
+    title:{
+        type: String,
     },
     type: {
         type: String,
@@ -52,4 +56,7 @@ const SauceSchema = mongoose.Schema({
 
 });
 
-module.exports = mongoose.model("sauces", SauceSchema);
+// module.exports = mongoose.model("sauces", SauceSchema);
+module.exports = {
+    Sauce: mongoose.model("sauces", SauceSchema)
+};

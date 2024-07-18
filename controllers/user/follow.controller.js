@@ -28,6 +28,7 @@ const follow = async (req, res) => {
 			followReciever: followReciever,
 		});
 		await follow.save();
+		//! missing populate 
 		return res
 			.status(200)
 			.json({ message: "user has been followed Successfully", follow });
@@ -55,6 +56,7 @@ const unfollow = async (req, res) => {
 			followGiver: userId,
 			followReciever: userToUnfollow,
 		});
+		//! missing populate 
 		if (!unfollow) {
 			return res
 				.status(400)

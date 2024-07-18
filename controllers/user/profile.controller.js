@@ -1,5 +1,5 @@
 // const { STATUS_CODES } = require("http");
-const Sauce = require("../../models/sauce.model.js");
+const { Sauce } = require("../../models/sauce.model.js");
 const User = require("../../models/user.model.js");
 const { Follow, Block } = require("../../models/follow.model.js");
 const baseUrl = process.env.SERVER_BASE_URL || "/";
@@ -126,35 +126,6 @@ const getUser = async (req,res) => {
     }
 }
 
-
-const addSauce = async (req,res) => {
-    try {
-        // add sauce to db
-        if (!req.body.name) {
-            return res.status(400).json({message:"Sauce name is required"})
-        }
-        const user = await User.findOne({ email: req.user.email });
-        const sauce = await Sauce.create({
-            name: req.body.name,
-            type : req.body?.type,
-            owner : user.id,
-            description : req.body?.description
-        }) 
-        
-		return res.status(200).json({
-			message: "Sauce Added Successfully",
-			sauce,
-		});
-    } catch (error) {
-        console.log(error);
-        return res
-        .status(400)
-        .json({message: "Something went wrong while Adding Sauce",
-            error,
-        })
-    }
-};
-
 const welcome1 = async (req,res) =>{
     try {
         // return user's welcome boolean
@@ -222,7 +193,6 @@ module.exports ={
     changeImage,
     deleteUser,
     reactivateUser,
-    addSauce,
     welcome1,
     welcome2,
     getUser,

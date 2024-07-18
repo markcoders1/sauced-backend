@@ -21,7 +21,8 @@ app.use("/uploads", express.static("uploads"));
 //User Routes
 const profileRouter = require("./routes/user/profile.routes.js");
 const authRouter = require("./routes/user/auth.routes.js");
-const followRoutes = require("./routes/user/follow.routes.js")
+const followRoutes = require("./routes/user/follow.routes.js");
+const sauceRoutes = require("./routes/user/sauce.routes.js");
 
 //Admin Routes
 const adminAuthRouter = require("./routes/admin/auth.routes.js");
@@ -31,9 +32,10 @@ const adminAuthRouter = require("./routes/admin/auth.routes.js");
 app.use("/api/auth", adminAuthRouter);
 
 //user
-app.use("/api", profileRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/", followRoutes)
+app.use("/api", profileRouter);
+app.use("/api", followRoutes);
+app.use("/api", sauceRoutes);
 
 app.use("*", (req, res) =>
     res.status(404).json({ error: "route not found", code: 404 })
