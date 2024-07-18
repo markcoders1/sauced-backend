@@ -5,25 +5,24 @@
 // Done setup multer middleware  
 // Done changeImage API 
 // Done firebase auth
-// DOne Welcome APIs
-// Done Delete account API => make account inactive
-// Done Sauce Model
-// Done follow , getFollowers, getFollowing
+// Done 2 Welcome APIs
+// Done Delete account API => make account inactive in db and Disbaled in firebase users
+// Done AddSauce API and Sauce Model
+// Done follow
+// Done getFollowers and getFollowing APIs
 // Done getUser with followers and following count
+// Done unfollow
+// Done blockUser with block schema model
+// Done Unblock
+// Done getRandomUsers API 
 
 
 //ToDo
 
-//  buttons on the bottom bar:
-//  1 home 
-//  2 search 
-//  3 award
-//  4 profile
-// location
-// an APi that returns trending hot sauces, comapny name, sauce name, 
-// users should be able to add reviews
-// get randomly 5 users as suggestion to follow
-// check if ive already subscribed a user
+// Checkin ... location?
+// user can post reviews to sauces and rate from 1 to 5 stars, will these reviews have comments or are comments something entirely separate
+// comments
+
 
 
 
