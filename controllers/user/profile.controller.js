@@ -67,22 +67,25 @@ const changeImage = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-    try {
-        //set logged in user's status to inactive and disable them from firebase as well
-      const user = await User.findOne({ email:req.user.email });
-      if (!user) return res.status(404).send({ message: "User not found." });
-      const disabled = await admin
-        .auth()
-        .updateUser(user.uid, { disabled: true });
-      user.status = "inactive";
-      await user.save()
-      res.status(200).send({ message: "User has been deleted.", disabled });
-    } catch (error) {
-      console.log(error);
-      return res.status(400).json({message: "Something went wrong while Deleting user",
-        error,
-    });
-    }
+	try {
+		//set logged in user's status to inactive and disable them from firebase as well
+		const user = await User.findOne({ email: req.user.email });
+		if (!user) return res.status(404).send({ message: "User not found." });
+		const disabled = await admin
+			.auth()
+			.updateUser(user.uid, { disabled: true });
+		user.status = "inactive";
+		await user.save();
+		res.status(200).send({ message: "User has been deleted.", disabled });
+	} catch (error) {
+		console.log(error);
+		return res
+			.status(400)
+			.json({
+				message: "Something went wrong while Deleting user",
+				error,
+			});
+	}
 };
 
 const reactivateUser = async (req, res) => {
