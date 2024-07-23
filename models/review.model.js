@@ -22,17 +22,6 @@ const ReviewSchema = new Schema({
 
 }, {timestamps: true})
 
-const BlockSchema = new Schema({
-    userId: {
-        type: Schema.Types.ObjectId, // current user
-        ref: "users"
-    },
-    blockList: [{
-        type: Schema.Types.ObjectId, // blocked users
-        ref: "users"
-    }]
-}, {timestamps: true})
-
 module.exports = {
     Review: mongoose.model("reviews", ReviewSchema)
 };
