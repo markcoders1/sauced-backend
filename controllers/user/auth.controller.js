@@ -1,5 +1,5 @@
 const User = require("../../models/user.model.js");
-const {Follow} = require("../../models/follow.model.js")
+const { Follow } = require("../../models/follow.model.js");
 const { initializeAdmin } = require("../../services/firebase.js");
 const admin = initializeAdmin();
 const jwt = require("jsonwebtoken");
@@ -50,8 +50,12 @@ const firebaseAuth = async (req, res) => {
             const token = jwt.sign({ _id: user._id }, process.env.TOKEN_KEY, {
                 expiresIn: "60d",
             });
-            const following = await Follow.countDocuments({followGiver:user._id});
-            const followers = await Follow.countDocuments({followReciever:user._id});
+            const following = await Follow.countDocuments({
+                followGiver: user._id,
+            });
+            const followers = await Follow.countDocuments({
+                followReciever: user._id,
+            });
             res.status(200).send({
                 user: {
                     token,
@@ -68,6 +72,19 @@ const firebaseAuth = async (req, res) => {
     }
 };
 
+const webhook = (req, res) => {
+    try {
+        console.log(req.body);
+        res.status(200).send({ message: "Webhook received successfully" });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            message: "Something went wrong :(",
+            error,
+        });
+    }
+};
 module.exports = {
+    webhook,
     firebaseAuth,
 };
