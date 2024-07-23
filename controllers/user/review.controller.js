@@ -11,7 +11,7 @@ const createReview = async (req, res) => {
 		}
 		if (![1, 2, 3, 4, 5].includes(star)) {
 			return res.status(400).json({
-				message: "Star must be a number from 1 to 5",
+				message: "star must be a number from 1 to 5",
 			});
 		}
 		const review = await Review.create({
@@ -20,9 +20,17 @@ const createReview = async (req, res) => {
 			star: star,
 			text: text,
 		});
+
+		const populatedReview = await Review.findById(review._id)
+			.populate("owner", "name email")
+			.populate("sauceId", "name title description ingredients image");
+
 		return res
 			.status(200)
-			.json({ message: "Review Created Successfully", review });
+			.json({
+				message: "Review Created Successfully",
+				review: populatedReview,
+			});
 	} catch (error) {
 		return res.status(400).json({
 			message: "Something went wrong while creating a review",
@@ -34,10 +42,12 @@ const createReview = async (req, res) => {
 const getUserReviews = async (req, res) => {
 	try {
 		const user = req.user;
-		const reviews = await Review.find({ owner: user._id });
+		const reviews = await Review.find({ owner: user._id })
+			.populate("owner", "name email")
+			.populate("sauceId", "name title description ingredients image");
 		return res
 			.status(200)
-			.json({ message: "User Reviews returned Successfully", reviews });
+			.json({ message: "User Reviews fetched Successfully", reviews });
 	} catch (error) {
 		return res.status(400).json({
 			message: "Something went wrong while getting user reviews",
@@ -51,16 +61,19 @@ const updateReview = async (req, res) => {
 		const { reviewId, star, text } = req.body;
 		if (![1, 2, 3, 4, 5].includes(star)) {
 			return res.status(400).json({
-				message: "Star must be a number from 1 to 5",
+				message: "star must be a number from 1 to 5",
 			});
 		}
 		const review = await Review.findOneAndUpdate(
 			{ _id: reviewId, owner: req.user._id },
 			{ star, text },
 			{ new: true }
-		);
+		)
+			.populate("owner", "name email")
+			.populate("sauceId", "name title description ingredients image");
+
 		if (!review) {
-			return res.status(404).json({ message: "Review not found" });
+			return res.status(404).json({ message: "incorrect reviewId Review not found" });
 		}
 		return res
 			.status(200)
@@ -79,7 +92,10 @@ const deleteReview = async (req, res) => {
 		const review = await Review.findOneAndDelete({
 			_id: reviewId,
 			owner: req.user._id,
-		});
+		})
+			.populate("owner", "name email")
+			.populate("sauceId", "name title description ingredients image");
+
 		if (!review) {
 			return res.status(404).json({ message: "Review not found" });
 		}
