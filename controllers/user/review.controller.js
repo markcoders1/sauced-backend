@@ -25,12 +25,10 @@ const createReview = async (req, res) => {
 			.populate("owner", "name email")
 			.populate("sauceId", "name title description ingredients image");
 
-		return res
-			.status(200)
-			.json({
-				message: "Review Created Successfully",
-				review: populatedReview,
-			});
+		return res.status(200).json({
+			message: "Review Created Successfully",
+			review: populatedReview,
+		});
 	} catch (error) {
 		return res.status(400).json({
 			message: "Something went wrong while creating a review",
@@ -73,7 +71,9 @@ const updateReview = async (req, res) => {
 			.populate("sauceId", "name title description ingredients image");
 
 		if (!review) {
-			return res.status(404).json({ message: "incorrect reviewId Review not found" });
+			return res
+				.status(404)
+				.json({ message: "incorrect reviewId, Review not found" });
 		}
 		return res
 			.status(200)

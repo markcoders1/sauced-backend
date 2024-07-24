@@ -129,7 +129,7 @@ const getSauces = async (req, res) => {
 		if (type === "toprated") {
 			const topRatedSauces = await Sauce.find()
 				.sort({ views: -1 }) // Sort by view count in descending order
-				.limit(15); // Limit the results to the top 15
+				.limit(20); // Limit the results to the top 20
 			return res.status(200).json({
 				message: "Top Rated sauces retrieved successfully",
 				sauces: topRatedSauces,
@@ -150,23 +150,25 @@ const getSauces = async (req, res) => {
 				// sauces: likedSauces,
 			});
 		}
-		if (type === "requested") {
-			const requestedSauces = await Sauce.find({ isRequested: true });
-			return res.status(200).json({
-				message: "Requested sauces retrieved successfully",
-				sauces: requestedSauces,
-			});
-		}
-		if (type == "" || !type) {
-			const notRequestedSauces = await Sauce.find({ isRequested: false });
-			return res.status(200).json({
-				message: "All sauces retrieved successfully",
-				sauces: notRequestedSauces,
-			});
-		}
+		//! only admin should be able to get all sauces and get requested sauces
+		// if (type === "requested") {
+		// 	const requestedSauces = await Sauce.find({ isRequested: true });
+		// 	return res.status(200).json({
+		// 		message: "Requested sauces retrieved successfully",
+		// 		sauces: requestedSauces,
+		// 	});
+		// }
+		// if (type == "" || !type) {
+		// 	const notRequestedSauces = await Sauce.find({ isRequested: false });
+		// 	return res.status(200).json({
+		// 		message: "All sauces retrieved successfully",
+		// 		sauces: notRequestedSauces,
+		// 	});
+		// }
 		return res.status(400).json({
 			message:
-				"type can only be 'favourite', 'checkedin', 'featured', 'toprated' or 'requested'",
+				// "type can only be 'favourite', 'checkedin', 'featured', 'toprated' or 'requested'",
+				"type can only be 'favourite', 'checkedin', 'featured' or 'toprated'",
 		});
 	} catch (error) {
 		return res

@@ -28,7 +28,8 @@ const UserSchema = mongoose.Schema({
     // },
     type: {
         type: String,
-        default: "user",
+        default: "user", // admin can change "user" to "brand"
+        required:true
     },
     status: {
         type: String,

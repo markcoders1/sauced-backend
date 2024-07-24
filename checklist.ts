@@ -24,6 +24,7 @@
 // Done get user reviews
 // Done like/unlike sauce API
 // Done viewSauce API for when user clicks on a sauce and it opens the sauce with full details
+// Done getSauces API with images with a parameter to select featured or top rated sauces or favourite or checkin 
 
 //ToDo
 
@@ -41,17 +42,12 @@
 
 // another API for admin, who will see this request and then accept or decline the event
 
-// get sauce API with images,, with a parameter to select feautred or top rated sauces
+// 
 // (featured k array me admin dalega sauces)
 
-// 2 more parameters, favourite and checked-in, 
 
 // top rated brands
 
-// return top rated sauces 
-
-// brand schema
-// fields , name image ,
 // can post sauces, which will be added 
 
 
@@ -63,7 +59,6 @@
 // getAllUsers
 // Get All Sauces
 // delete specific review
-// delete specific comments
 
 
 

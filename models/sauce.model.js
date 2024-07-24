@@ -3,17 +3,9 @@ const { Schema } = require("mongoose");
 
 const SauceSchema = new Schema(
 	{
-		// uid: {
-		//     type: String,
-		//     required: true,
-		// },
-		// brand:{
-		//     type: String,
-		//     required: true,
-		// },
 		owner: {
 			type: Schema.Types.ObjectId,
-			ref: "users", // make it brands after making brand schema
+			ref: "users",
 			required: true,
 		},
 		name: {
@@ -50,10 +42,6 @@ const SauceSchema = new Schema(
 			type: Number,
 			default: 0,
 		},
-		// likedBy: {
-		// 	type: Array,
-		// 	default: [],
-		// },
 		checkIn: {
 			type: Number,
 			default: 0,
@@ -64,10 +52,6 @@ const SauceSchema = new Schema(
 		productLink: {
 			type: String,
 		},
-		// date: {
-		// 	type: Date,
-		// 	default: Date.now,
-		// },
 	},
 	{ timestamps: true }
 );
