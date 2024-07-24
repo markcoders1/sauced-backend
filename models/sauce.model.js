@@ -11,6 +11,11 @@ const SauceSchema = new Schema(
 		//     type: String,
 		//     required: true,
 		// },
+		owner: {
+			type: Schema.Types.ObjectId,
+			ref: "users", // make it brands after making brand schema
+			required: true,
+		},
 		name: {
 			type: String,
 			required: true,
@@ -28,11 +33,6 @@ const SauceSchema = new Schema(
 			type: Array,
 			default: [],
 		},
-		owner: {
-			type: Schema.Types.ObjectId,
-			ref: "users",
-			required: true,
-		},
 		isRequested: {
 			type: Boolean,
 			default: false,
@@ -41,10 +41,14 @@ const SauceSchema = new Schema(
 		image: {
 			type: String,
 		},
-		likedBy: {
-			type: Array,
-			default: [],
+		views: {
+			type: Number,
+			default: 0,
 		},
+		// likedBy: {
+		// 	type: Array,
+		// 	default: [],
+		// },
 		checkIn: {
 			type: Number,
 			default: 0,

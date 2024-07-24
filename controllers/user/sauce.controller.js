@@ -1,6 +1,7 @@
 const { Sauce, Like } = require("../../models/sauce.model.js");
 const User = require("../../models/user.model.js");
 
+//! move addSauce to admin
 const addSauce = async (req, res) => {
 	try {
 		const { name, title, type, description, ingredients } = req.body;
@@ -68,22 +69,18 @@ const likeSauce = async (req, res) => {
 		if (existingLike) {
 			await Like.findOneAndDelete({ userId, sauceId });
 			const likeCount = await Like.countDocuments({ sauceId });
-			return res
-				.status(200)
-				.json({
-					message: "Sauce unliked successfully",
-					likeCount: likeCount,
-				});
+			return res.status(200).json({
+				message: "Sauce unliked successfully",
+				likeCount: likeCount,
+			});
 		} else {
 			const like = await Like.create({ userId, sauceId });
 			const likeCount = await Like.countDocuments({ sauceId });
-			return res
-				.status(200)
-				.json({
-					message: "Sauce liked successfully",
-					like,
-					likeCount: likeCount,
-				});
+			return res.status(200).json({
+				message: "Sauce liked successfully",
+				like,
+				likeCount: likeCount,
+			});
 		}
 	} catch (error) {
 		return res.status(400).json({
@@ -92,8 +89,32 @@ const likeSauce = async (req, res) => {
 	}
 };
 
+const viewSauce = async (req, res) => {
+	try {
+		// Find the sauce by ID and increment the views count by 1
+		const { sauceId } = req.body;
+		const sauce = await Sauce.findByIdAndUpdate(
+			sauceId,
+			{ $inc: { views: 1 } },
+			{ new: true }
+		);
+		if (!sauce) {
+			return res.status(404).json({ message: "Sauce not found" });
+		}
+		return res.status(200).json({
+			message: "Sauce viewed successfully",
+			sauce,
+		});
+	} catch (error) {
+		return res.status(400).json({
+			message: "Something went wrong while viewing the sauce",
+		});
+	}
+};
+
 module.exports = {
 	addSauce,
 	requestSauce,
 	likeSauce,
+	viewSauce,
 };
