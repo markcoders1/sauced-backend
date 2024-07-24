@@ -55,6 +55,7 @@
 // can post sauces, which will be added 
 
 
+// make a middleware to detect if user is a brand or not
 
 
 

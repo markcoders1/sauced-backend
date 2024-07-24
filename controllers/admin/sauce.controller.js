@@ -10,3 +10,4 @@
 
 // search for specific brand ( return all sauces of a brand )
 
+// makeSauceFeatured API

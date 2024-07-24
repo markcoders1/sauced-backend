@@ -101,9 +101,10 @@ const viewSauce = async (req, res) => {
 		if (!sauce) {
 			return res.status(404).json({ message: "Sauce not found" });
 		}
+		const detailedSauce = await sauce.populate("owner", "name email image");
 		return res.status(200).json({
 			message: "Sauce viewed successfully",
-			sauce,
+			sauce: detailedSauce,
 		});
 	} catch (error) {
 		return res.status(400).json({
@@ -112,9 +113,72 @@ const viewSauce = async (req, res) => {
 	}
 };
 
+const getSauces = async (req, res) => {
+	try {
+		const { type } = req.body;
+		const userId = req.user._id;
+
+		if (type === "favourite") {
+			const likes = await Like.find({ userId }).populate("sauceId");
+			const likedSauces = likes.map((like) => like.sauceId);
+			return res.status(200).json({
+				message: "Liked sauces retrieved successfully",
+				sauces: likedSauces,
+			});
+		}
+		if (type === "toprated") {
+			const topRatedSauces = await Sauce.find()
+				.sort({ views: -1 }) // Sort by view count in descending order
+				.limit(15); // Limit the results to the top 15
+			return res.status(200).json({
+				message: "Top Rated sauces retrieved successfully",
+				sauces: topRatedSauces,
+			});
+		}
+		if (type === "featured") {
+			//! test this again when admin creates featured sauces array
+			const featuredSauces = await Sauce.find({ isFeatured: true });
+			return res.status(200).json({
+				message: "Featured sauces retrieved successfully",
+				featured: featuredSauces,
+			});
+		}
+		if (type === "checkedin") {
+			//! finish this when checkin logic is done
+			return res.status(200).json({
+				message: "Checked-in sauces retrieved successfully",
+				// sauces: likedSauces,
+			});
+		}
+		if (type === "requested") {
+			const requestedSauces = await Sauce.find({ isRequested: true });
+			return res.status(200).json({
+				message: "Requested sauces retrieved successfully",
+				sauces: requestedSauces,
+			});
+		}
+		if (type == "" || !type) {
+			const notRequestedSauces = await Sauce.find({ isRequested: false });
+			return res.status(200).json({
+				message: "All sauces retrieved successfully",
+				sauces: notRequestedSauces,
+			});
+		}
+		return res.status(400).json({
+			message:
+				"type can only be 'favourite', 'checkedin', 'featured', 'toprated' or 'requested'",
+		});
+	} catch (error) {
+		return res
+			.status(400)
+			.json({ message: "Something went wrong while retrieving Sauces" });
+	}
+};
+
 module.exports = {
 	addSauce,
 	requestSauce,
 	likeSauce,
 	viewSauce,
+	getSauces,
 };
