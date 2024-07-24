@@ -15,26 +15,18 @@
 // Done blockUser with block schema model
 // Done Unblock
 // Done getRandomUsers API 
-
+// Done add like schema 
+// Done  add review schema 
+// Done APIs: CRUD for review 
+// Done create review  
+// Done edit review
+// Done delete review
+// Done get user reviews
+// Done like/unlike sauce API
 
 //ToDo
 
-// add like schema 
-// add review schema 
-//APIs: CRUD for review 
-// create review  
-// edit review
-// delete review
-// get/return review
-
-// like sauce
-// unlike sauce
-// 
-
-
 // Checkin ... location?
-// user can post reviews to sauces and rate from 1 to 5 stars, will these reviews have comments or are comments something entirely separate
-// comments
 
 //Todo ADMIN
 // getAllUsers

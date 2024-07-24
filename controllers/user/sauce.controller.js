@@ -1,4 +1,4 @@
-const { Sauce } = require("../../models/sauce.model.js");
+const { Sauce, Like } = require("../../models/sauce.model.js");
 const User = require("../../models/user.model.js");
 
 const addSauce = async (req, res) => {
@@ -58,7 +58,42 @@ const requestSauce = async (req, res) => {
 	}
 };
 
+const likeSauce = async (req, res) => {
+	try {
+		//like sauce, and unlike it if its already liked, return with sauce's like count
+		const { sauceId } = req.body;
+		const userId = req.user._id;
+
+		const existingLike = await Like.findOne({ userId, sauceId });
+		if (existingLike) {
+			await Like.findOneAndDelete({ userId, sauceId });
+			const likeCount = await Like.countDocuments({ sauceId });
+			return res
+				.status(200)
+				.json({
+					message: "Sauce unliked successfully",
+					likeCount: likeCount,
+				});
+		} else {
+			const like = await Like.create({ userId, sauceId });
+			const likeCount = await Like.countDocuments({ sauceId });
+			return res
+				.status(200)
+				.json({
+					message: "Sauce liked successfully",
+					like,
+					likeCount: likeCount,
+				});
+		}
+	} catch (error) {
+		return res.status(400).json({
+			message: "Something went wrong while toggling the like status",
+		});
+	}
+};
+
 module.exports = {
 	addSauce,
 	requestSauce,
+	likeSauce,
 };
