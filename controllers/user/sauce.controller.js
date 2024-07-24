@@ -9,6 +9,12 @@ const addSauce = async (req, res) => {
 		if (!name) {
 			return res.status(400).json({ message: "Sauce name is required" });
 		}
+
+		if (!req.file) {
+			console.log("Image not found");
+			return res.status(400).json({ message: "Image not found" });
+		}
+
 		const user = await User.findOne({ email: req.user.email });
 		const sauce = await Sauce.create({
 			isRequested: false,
@@ -18,6 +24,7 @@ const addSauce = async (req, res) => {
 			owner: user.id,
 			description: description,
 			ingredients: ingredients,
+			image: baseUrl + "uploads/" + req.file.filename
 		});
 
 		return res.status(200).json({
@@ -28,6 +35,44 @@ const addSauce = async (req, res) => {
 		console.log(error);
 		return res.status(400).json({
 			message: "Something went wrong while Adding Sauce",
+			error,
+		});
+	}
+};
+
+const changeSauceImage = async (req, res) => {
+	try {
+		if (!req.file) {
+			console.log("Image not found");
+			return res.status(400).json({ message: "Image not found" });
+		}
+
+		const { sauceId } = req.body;
+		const userId = req.user._id;
+
+		// Find the sauce by ID and ensure the user is the owner
+		//! const sauce = await Sauce.findOne({ _id: sauceId, owner: userId });
+		const sauce = await Sauce.findOne({ _id: sauceId});
+		if (!sauce) {
+			return res
+				.status(404)
+				.json({
+					message:
+						"Sauce not found or you do not have permission to update this sauce",
+				});
+		}
+
+		sauce.image = baseUrl + "uploads/" + req.file.filename;
+		const updatedSauce = await sauce.save();
+
+		return res.status(200).json({
+			message: "Sauce Image Updated Successfully",
+			sauce: updatedSauce,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(400).json({
+			message: "Something went wrong while changing sauce image",
 			error,
 		});
 	}
@@ -183,4 +228,5 @@ module.exports = {
 	likeSauce,
 	viewSauce,
 	getSauces,
+	changeSauceImage,
 };
