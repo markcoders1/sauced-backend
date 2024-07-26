@@ -28,14 +28,15 @@ const reviewRoutes = require("./routes/user/review.routes.js");
 //Admin Routes
 const adminAuthRouter = require("./routes/admin/auth.routes.js");
 const adminSauceRoutes = require("./routes/admin/sauce.routes.js");
-const adminReviewRoutes = require("./routes/admin/review.routes.js")
+const adminReviewRoutes = require("./routes/admin/review.routes.js");
+const adminProfileRoutes = require('./routes/admin/profile.routes.js')
 
 //routes usage
 //admin
 app.use("/api/auth", adminAuthRouter);
-
 app.use("/api/admin", adminSauceRoutes);
 app.use("/api/admin", adminReviewRoutes);
+app.use("/api/admin", adminProfileRoutes);
 
 //user
 app.use("/api/auth", authRouter);

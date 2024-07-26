@@ -5,7 +5,6 @@ const {
 	deleteUser,
 	welcome1,
 	welcome2,
-	reactivateUser,
 	getUser,
 	getRandomUsers,
 } = require("../../controllers/user/profile.controller.js");
@@ -18,7 +17,6 @@ const router = express.Router();
 router.patch("/change-name", authMiddleware, changeName);
 router.post("/change-image",authMiddleware, upload.single("image"), changeImage);
 router.post("/delete-user", authMiddleware, deleteUser);
-//! router.post("/test", reactivateUser) //move to admin
 router.get("/welcome", authMiddleware ,welcome1)
 router.post("/welcome", authMiddleware, welcome2)
 router.get("/get-user", authMiddleware, getUser )

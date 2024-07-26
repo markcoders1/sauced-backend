@@ -88,25 +88,6 @@ const deleteUser = async (req, res) => {
 	}
 };
 
-const reactivateUser = async (req, res) => {
-	try {
-        //set logged in user's status to active and undo disable from firebase as well
-		const user = await User.findOne({ email: req.body.email });
-		if (!user) return res.status(404).send({ message: "User not found," });
-		const activate = await admin
-			.auth()
-			.updateUser(user.uid, { disabled: false });
-		user.status = "active";
-		await user.save();
-		res.status(200).send({ message: "User has been undeleted.", activate });
-	} catch (error) {
-		res.status(500).json({
-			message: "Something went wrong while undeleting user",
-			error,
-		});
-	}
-};
-
 const getUser = async (req,res) => {
     try {
         //return current user and his followers count and following count
@@ -195,7 +176,6 @@ module.exports ={
     changeName,
     changeImage,
     deleteUser,
-    reactivateUser,
     welcome1,
     welcome2,
     getUser,

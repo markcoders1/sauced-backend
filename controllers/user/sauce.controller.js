@@ -3,8 +3,6 @@ const User = require("../../models/user.model.js");
 const baseUrl = process.env.SERVER_BASE_URL || "/";
 const fs = require("fs");
 
-
-
 const changeSauceImage = async (req, res) => {
 	try {
 		if (!req.file) {
@@ -19,12 +17,10 @@ const changeSauceImage = async (req, res) => {
 		const sauce = await Sauce.findOne({ _id: sauceId, owner: userId });
 		// const sauce = await Sauce.findOne({ _id: sauceId});
 		if (!sauce) {
-			return res
-				.status(404)
-				.json({
-					message:
-						"Sauce not found or you do not have permission to update this sauce",
-				});
+			return res.status(404).json({
+				message:
+					"Sauce not found or you do not have permission to update this sauce",
+			});
 		}
 
 		sauce.image = baseUrl + "uploads/" + req.file.filename;
@@ -146,7 +142,7 @@ const getSauces = async (req, res) => {
 			});
 		}
 		if (type === "featured") {
-			//! test this again when admin creates featured sauces array, for now using isFeatured field in sauces 
+			//! test this again when admin creates featured sauces array, for now using isFeatured field in sauces
 			const featuredSauces = await Sauce.find({ isFeatured: true });
 			return res.status(200).json({
 				message: "Featured sauces retrieved successfully",
@@ -161,24 +157,29 @@ const getSauces = async (req, res) => {
 			});
 		}
 		//! only admin should be able to get all sauces and get requested sauces
-		// if (type === "requested") {
-		// 	const requestedSauces = await Sauce.find({ isRequested: true });
-		// 	return res.status(200).json({
-		// 		message: "Requested sauces retrieved successfully",
-		// 		sauces: requestedSauces,
-		// 	});
-		// }
-		// if (type == "" || !type) {
-		// 	const notRequestedSauces = await Sauce.find({ isRequested: false });
-		// 	return res.status(200).json({
-		// 		message: "All sauces retrieved successfully",
-		// 		sauces: notRequestedSauces,
-		// 	});
-		// }
+		if (req.user.type === "admin") {
+			if (type === "requested") {
+				const requestedSauces = await Sauce.find({ isRequested: true });
+				return res.status(200).json({
+					message: "Requested sauces retrieved successfully",
+					sauces: requestedSauces,
+				});
+			}
+			if (type == "" || !type || type === "all") {
+				const notRequestedSauces = await Sauce.find({
+					isRequested: false,
+				});
+				return res.status(200).json({
+					message: "All sauces retrieved successfully",
+					sauces: notRequestedSauces,
+				});
+			}
+		}
+
 		return res.status(400).json({
 			message:
 				// "type can only be 'favourite', 'checkedin', 'featured', 'toprated' or 'requested'",
-				"type can only be 'favourite', 'checkedin', 'featured' or 'toprated'",
+				"type can only be 'favourite', 'checkedin', 'featured' or 'toprated' ('requested' or 'all' for admin only)",
 		});
 	} catch (error) {
 		return res
