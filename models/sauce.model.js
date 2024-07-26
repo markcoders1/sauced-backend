@@ -30,10 +30,10 @@ const SauceSchema = new Schema(
 			default: false,
 			required: true,
 		},
-		isFeatured:{
-			type:Boolean,
-			default:false,
-			required:true
+		isFeatured: {
+			type: Boolean,
+			default: false,
+			required: true,
 		},
 		image: {
 			type: String,

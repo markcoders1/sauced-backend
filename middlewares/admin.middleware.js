@@ -8,6 +8,10 @@ module.exports = async (req, res, next) => {
 	try {
 		const verified = jwt.verify(token, process.env.TOKEN_KEY);
 		let user = await User.findById(verified._id);
+		if (user.type != "admin")
+			return res
+				.status(403)
+				.send({ message: "Unauthroized for this action." });
 		req.user = user;
 		next();
 	} catch (error) {

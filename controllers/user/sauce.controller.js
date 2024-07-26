@@ -3,44 +3,7 @@ const User = require("../../models/user.model.js");
 const baseUrl = process.env.SERVER_BASE_URL || "/";
 const fs = require("fs");
 
-//! move addSauce to admin
-const addSauce = async (req, res) => {
-	try {
-		const { name, title, type, description, ingredients } = req.body;
-		// add sauce to db
-		if (!name) {
-			return res.status(400).json({ message: "Sauce name is required" });
-		}
 
-		if (!req.file) {
-			console.log("Image not found");
-			return res.status(400).json({ message: "Image not found" });
-		}
-
-		const user = await User.findOne({ email: req.user.email });
-		const sauce = await Sauce.create({
-			isRequested: false,
-			title: title,
-			name: name,
-			type: type,
-			owner: user.id,
-			description: description,
-			ingredients: ingredients,
-			image: baseUrl + "uploads/" + req.file.filename
-		});
-
-		return res.status(200).json({
-			message: "Sauce Added Successfully",
-			sauce,
-		});
-	} catch (error) {
-		console.log(error);
-		return res.status(400).json({
-			message: "Something went wrong while Adding Sauce",
-			error,
-		});
-	}
-};
 
 const changeSauceImage = async (req, res) => {
 	try {
@@ -53,8 +16,8 @@ const changeSauceImage = async (req, res) => {
 		const userId = req.user._id;
 
 		// Find the sauce by ID and ensure the user is the owner
-		//! const sauce = await Sauce.findOne({ _id: sauceId, owner: userId });
-		const sauce = await Sauce.findOne({ _id: sauceId});
+		const sauce = await Sauce.findOne({ _id: sauceId, owner: userId });
+		// const sauce = await Sauce.findOne({ _id: sauceId});
 		if (!sauce) {
 			return res
 				.status(404)
@@ -183,7 +146,7 @@ const getSauces = async (req, res) => {
 			});
 		}
 		if (type === "featured") {
-			//! test this again when admin creates featured sauces array
+			//! test this again when admin creates featured sauces array, for now using isFeatured field in sauces 
 			const featuredSauces = await Sauce.find({ isFeatured: true });
 			return res.status(200).json({
 				message: "Featured sauces retrieved successfully",
@@ -225,7 +188,6 @@ const getSauces = async (req, res) => {
 };
 
 module.exports = {
-	addSauce,
 	requestSauce,
 	likeSauce,
 	viewSauce,

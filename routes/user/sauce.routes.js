@@ -1,7 +1,6 @@
 const express = require("express");
 const {
 	requestSauce,
-	addSauce,
 	likeSauce,
 	viewSauce,
 	getSauces,
@@ -14,7 +13,6 @@ const { upload } = require("../../middlewares/multer.middleware.js");
 const router = express.Router();
 
 router.post("/request-sauce", authMiddleware, requestSauce);
-router.post("/add-sauce", authMiddleware,  upload.single("image"), addSauce);
 router.post("/like-sauce", authMiddleware, likeSauce);
 router.post("/view-sauce", authMiddleware, viewSauce);
 router.post("/get-sauces", authMiddleware, getSauces);

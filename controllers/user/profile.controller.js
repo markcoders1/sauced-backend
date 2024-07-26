@@ -173,7 +173,7 @@ const welcome2 = async (req,res) =>{
 
 const getRandomUsers = async (req,res) => {
     try {
-        //get 10 random users from db
+        //returns 10 random users from db
         const randomUsers = await User.aggregate([
             {
                 $sample:{size:10}
@@ -199,5 +199,5 @@ module.exports ={
     welcome1,
     welcome2,
     getUser,
-    getRandomUsers
+    getRandomUsers,
 };
