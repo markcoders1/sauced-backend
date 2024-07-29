@@ -4,15 +4,15 @@ const mongoose = require("mongoose");
 
 const follow = async (req, res) => {
 	try {
-		// follow another user
-
 		const followGiver = req.user._id;
 		const followReciever = req.body._id;
+
 		if (!mongoose.isValidObjectId(followReciever)) {
 			return res
 				.status(400)
 				.json({ message: "Invalid user id to follow" });
 		}
+
 		const existingFollow = await Follow.findOne({
 			followGiver: followGiver,
 			followReciever: followReciever,
@@ -23,15 +23,17 @@ const follow = async (req, res) => {
 				.status(400)
 				.json({ message: "User is already followed" });
 		}
-		const follow = await Follow.create({
+
+		let follow = new Follow({
 			followGiver: followGiver,
 			followReciever: followReciever,
 		});
+
 		await follow.save();
-		//! missing populate 
+		await follow.populate("followGiver followReciever", "name name");
 		return res
 			.status(200)
-			.json({ message: "user has been followed Successfully", follow });
+			.json({ message: "User has been followed successfully", follow });
 	} catch (error) {
 		console.log(error);
 		return res
@@ -56,12 +58,13 @@ const unfollow = async (req, res) => {
 			followGiver: userId,
 			followReciever: userToUnfollow,
 		});
-		//! missing populate 
+
 		if (!unfollow) {
 			return res
 				.status(400)
 				.json({ message: "user is already unfollowed " });
 		} else {
+			await unfollow.populate("followGiver followReciever", "name name");
 			return res
 				.status(200)
 				.json({ message: "user unfollowed Successfully", unfollow });
