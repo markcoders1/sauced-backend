@@ -6,10 +6,10 @@ const {
 	changeAnySauceImage,
 } = require("../../controllers/admin/sauce.controller.js");
 
-const adminRoutes = express.Router();
-adminRoutes.use(adminMiddleware); // Apply admin middleware to all adminRoutes (in every file wherever adminRoutes is used)
+const adminRouter = express.Router();
+adminRouter.use(adminMiddleware); // Apply admin middleware to all adminRouter (in every file wherever adminRouter is used)
 
-adminRoutes.post("/add-sauce", upload.single("image"), addSauce);
-adminRoutes.post("/change-sauce-image", upload.single("image"), changeAnySauceImage);
+adminRouter.post("/add-sauce", upload.single("image"), addSauce);
+adminRouter.post("/change-sauce-image", upload.single("image"), changeAnySauceImage);
 
-module.exports = adminRoutes;
+module.exports = adminRouter;

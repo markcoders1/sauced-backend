@@ -21,29 +21,31 @@ app.use("/uploads", express.static("uploads"));
 //User Routes
 const profileRouter = require("./routes/user/profile.routes.js");
 const authRouter = require("./routes/user/auth.routes.js");
-const followRoutes = require("./routes/user/follow.routes.js");
-const sauceRoutes = require("./routes/user/sauce.routes.js");
-const reviewRoutes = require("./routes/user/review.routes.js");
+const followRouter = require("./routes/user/follow.routes.js");
+const sauceRouter = require("./routes/user/sauce.routes.js");
+const reviewRouter = require("./routes/user/review.routes.js");
 
 //Admin Routes
 const adminAuthRouter = require("./routes/admin/auth.routes.js");
-const adminSauceRoutes = require("./routes/admin/sauce.routes.js");
-const adminReviewRoutes = require("./routes/admin/review.routes.js");
-const adminProfileRoutes = require('./routes/admin/profile.routes.js')
+const adminSauceRouter = require("./routes/admin/sauce.routes.js");
+const adminReviewRouter = require("./routes/admin/review.routes.js");
+const adminProfileRouter = require("./routes/admin/profile.routes.js");
+const adminEventRouter = require("./routes/admin/event.routes.js");
 
 //routes usage
 //admin
 app.use("/api/auth", adminAuthRouter);
-app.use("/api/admin", adminSauceRoutes);
-app.use("/api/admin", adminReviewRoutes);
-app.use("/api/admin", adminProfileRoutes);
+app.use("/api/admin", adminSauceRouter);
+app.use("/api/admin", adminReviewRouter);
+app.use("/api/admin", adminProfileRouter);
+app.use("/api/admin", adminEventRouter);
 
 //user
 app.use("/api/auth", authRouter);
 app.use("/api", profileRouter);
-app.use("/api", followRoutes);
-app.use("/api", sauceRoutes);
-app.use("/api", reviewRoutes);
+app.use("/api", followRouter);
+app.use("/api", sauceRouter);
+app.use("/api", reviewRouter);
 
 app.use("*", (req, res) =>
 	res.status(404).json({ error: "route not found", code: 404 })

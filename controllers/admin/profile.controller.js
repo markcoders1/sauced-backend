@@ -1,5 +1,7 @@
 
 const User = require("../../models/user.model.js");
+const { initializeAdmin } = require("../../services/firebase.js");
+const admin = initializeAdmin();
 
 const reactivateUser = async (req, res) => {
 	try {
@@ -12,6 +14,7 @@ const reactivateUser = async (req, res) => {
 		await user.save();
 		res.status(200).send({ message: "User has been undeleted.", activate });
 	} catch (error) {
+		console.log(error);
 		res.status(500).json({
 			message: "Something went wrong while undeleting user",
 			error,

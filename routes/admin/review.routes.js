@@ -1,8 +1,8 @@
 const express = require("express");
 const { deleteSpecificReview } = require("../../controllers/admin/review.controller.js")
-const adminRoutes = express.Router();
-//admin middleware already applied on adminRoutes
+const adminRouter = express.Router();
+//admin middleware already applied on adminRouter
 
-adminRoutes.post("/delete-specific-review" , deleteSpecificReview);
+adminRouter.post("/delete-specific-review" , deleteSpecificReview);
 
-module.exports = adminRoutes;
+module.exports = adminRouter;

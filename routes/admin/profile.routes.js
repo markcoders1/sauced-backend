@@ -2,9 +2,9 @@ const express = require("express");
 const {
 	reactivateUser,
 } = require("../../controllers/admin/profile.controller.js");
-const adminRoutes = express.Router();
-//admin middleware already applied on adminRoutes
+const adminRouter = express.Router();
+//admin middleware already applied on adminRouter
 
-adminRoutes.post("/reactivate-user", reactivateUser);
+adminRouter.post("/reactivate-user", reactivateUser);
 
-module.exports = adminRoutes;
+module.exports = adminRouter;

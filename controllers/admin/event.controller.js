@@ -1,4 +1,5 @@
 const { Event } = require("../../models/event.model.js");
+const User = require("../../models/user.model.js");
 
 const addEvent = async (req, res) => {
 	try {
@@ -9,17 +10,19 @@ const addEvent = async (req, res) => {
 			eventName,
 			eventDetails,
 			eventDate,
-			owner,
+			// owner,
 			venueName,
 			venueDescription,
 			venueLocation,
 		} = req.body;
 
-		if (!owner) {
-			const owner = req.user._id;
-		}
+		// if (!owner) {
+		// 	owner = req.user._id; //if req.body me owner ki field ni to req.user se lelo
+		// }
 
-		const event = await Event.create({
+		let owner = req.user._id;
+
+		let event = new Event({
 			eventName: eventName,
 			eventDetails: eventDetails,
 			eventDate: eventDate,
@@ -28,12 +31,17 @@ const addEvent = async (req, res) => {
 			venueDescription: venueDescription,
 			venueLocation: venueLocation,
 		});
-		console.log(event);
+
+		await event.save();
+
+		await event.populate("owner", "name");
+		// console.log(event);
 
 		return res
 			.status(200)
 			.json({ message: "Event Added Successfully ", event });
 	} catch (error) {
+		console.log(error);
 		return res
 			.status(400)
 			.json({ message: "Something went wrong while adding event" });
