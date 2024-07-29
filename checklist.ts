@@ -7,7 +7,7 @@
 // Done firebase auth
 // Done 2 Welcome APIs
 // Done Delete account API => make account inactive in db and Disbaled in firebase users
-// Done AddSauce API and Sauce Model
+// Done Sauce Model
 // Done follow
 // Done getFollowers and getFollowing APIs
 // Done getUser with followers and following count
@@ -30,16 +30,6 @@
 
 // Checkin ... location?
 
-// request event API
-// details ki field hogi
-// details me bullet points 
-// venue ki feild hogi
-// venue description
-// co-ordinates of venue
-// venue name
-// event owner field hogi
-// event date field hogi
-
 // another API for admin, who will see this request and then accept or decline the event
 
 // 
@@ -57,10 +47,25 @@
 
 //Todo ADMIN
 // getAllUsers
-// Get All Sauces
-// delete specific review
+// DOne Get All Sauces and Get requested sauces API
+// Done delete specific review 
+// Done Reactivate any user
+// Done change any sauce image
+// Done add sauce
+// for now focus on these for admin panel 
+// user managament , sauce management  , event management , 
 
+// make event API
+// Approve event api?
 
-
+// event model :
+// details ki field hogi
+// details me bullet points
+// venue ki feild hogi
+// venue description
+// co-ordinates of venue
+// venue name
+// event owner field hogi
+// event date field hogi
 
 

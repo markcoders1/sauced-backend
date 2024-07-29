@@ -19,6 +19,8 @@ const reactivateUser = async (req, res) => {
 	}
 };
 
+// get all users
+
 module.exports={
     reactivateUser,
 }

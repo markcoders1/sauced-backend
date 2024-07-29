@@ -3,25 +3,6 @@ const User = require("../../models/user.model.js");
 const baseUrl = process.env.SERVER_BASE_URL || "/";
 const fs = require("fs");
 
-// Top Rated sauces array
-
-// Featured Sauces array
-
-// Tope Rated Brands Array
-
-// Hot Sauce Map array
-
-// search for specific sauce
-
-// search for specific brand ( return all sauces of a brand )
-
-// makeSauceFeatured API
-
-// get all sauces
-
-// get all reviews
-
-// get all users
 
 const addSauce = async (req, res) => {
 	try {
@@ -93,6 +74,23 @@ const changeAnySauceImage = async (req, res) => {
 		});
 	}
 };
+
+
+
+// Top Rated sauces array
+
+// Featured Sauces array
+
+// Tope Rated Brands Array
+
+// Hot Sauce Map array
+
+// search for specific sauce
+
+// search for specific brand ( return all sauces of a brand )
+
+// makeSauceFeatured API
+
 
 module.exports = {
 	addSauce,

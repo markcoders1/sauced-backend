@@ -19,6 +19,8 @@ const deleteSpecificReview = async (req, res) => {
 	}
 };
 
+// get all reviews
+
 module.exports = {
 	deleteSpecificReview,
 };
