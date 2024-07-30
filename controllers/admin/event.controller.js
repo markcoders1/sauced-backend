@@ -10,7 +10,7 @@ const addEvent = async (req, res) => {
 			eventName,
 			eventDetails,
 			eventDate,
-			// owner,
+			owner,
 			venueName,
 			venueDescription,
 			venueLocation,
@@ -20,7 +20,7 @@ const addEvent = async (req, res) => {
 		// 	owner = req.user._id; //if req.body me owner ki field ni to req.user se lelo
 		// }
 
-		let owner = req.user._id;
+		// let owner = req.user._id;
 
 		let event = new Event({
 			eventName: eventName,
