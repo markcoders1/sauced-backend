@@ -46,7 +46,7 @@
 
 
 //Todo ADMIN
-// getAllUsers
+// Done getAllUsers
 // DOne Get All Sauces and Get requested sauces API
 // Done delete specific review 
 // Done Reactivate any user
@@ -68,4 +68,14 @@
 // event owner field hogi
 // event date field hogi
 
+
+// comment model 
+// id
+// text
+// isReply boolean 
+// replies array
+ 
+
+// ADD comment API
+// reply comment API? or make them same
 
