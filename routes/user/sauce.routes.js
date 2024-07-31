@@ -15,7 +15,7 @@ const router = express.Router();
 router.post("/request-sauce", authMiddleware, requestSauce);
 router.post("/like-sauce", authMiddleware, likeSauce);
 router.post("/view-sauce", authMiddleware, viewSauce);
-router.post("/get-sauces", authMiddleware, getSauces);
+router.get("/get-sauces", authMiddleware, getSauces);
 router.post("/change-sauce-image", authMiddleware, upload.single("image"), changeSauceImage)
 
 module.exports = router;

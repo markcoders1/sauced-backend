@@ -121,72 +121,167 @@ const viewSauce = async (req, res) => {
 
 const getSauces = async (req, res) => {
 	try {
-		const { type } = req.body;
+		const { type } = req.query;
 		const userId = req.user._id;
 
-		if (type === "favourite") {
-			const likes = await Like.find({ userId }).populate("sauceId");
-			const likedSauces = likes.map((like) => like.sauceId);
-			return res.status(200).json({
-				message: "Liked sauces retrieved successfully",
-				sauces: likedSauces,
-			});
-		}
-		if (type === "toprated") {
-			const topRatedSauces = await Sauce.find()
-				.sort({ views: -1 }) // Sort by view count in descending order
-				.limit(20); // Limit the results to the top 20
-			return res.status(200).json({
-				message: "Top Rated sauces retrieved successfully",
-				sauces: topRatedSauces,
-			});
-		}
-		if (type === "featured") {
-			//! test this again when admin creates featured sauces array, for now using isFeatured field in sauces
-			const featuredSauces = await Sauce.find({ isFeatured: true });
-			return res.status(200).json({
-				message: "Featured sauces retrieved successfully",
-				featured: featuredSauces,
-			});
-		}
-		if (type === "checkedin") {
-			//! finish this when checkin logic is done
-			return res.status(200).json({
-				message: "Checked-in sauces retrieved successfully",
-				// sauces: likedSauces,
-			});
-		}
-		//! only admin should be able to get all sauces and get requested sauces
-		if (req.user.type === "admin") {
-			if (type === "requested") {
-				const requestedSauces = await Sauce.find({ isRequested: true });
-				return res.status(200).json({
-					message: "Requested sauces retrieved successfully",
-					sauces: requestedSauces,
-				});
-			}
-			if (type == "" || !type || type === "all") {
-				const notRequestedSauces = await Sauce.find({
-					isRequested: false,
-				});
+		let sauces;
+
+		switch (type) {
+			case "all":
+				if (req.user.type !== "admin") {
+					return res.status(403).json({
+						message: "Access denied: Admins only",
+					});
+				}
+				sauces = await Sauce.find({ isRequested: false }).populate(
+					"owner"
+				);
 				return res.status(200).json({
 					message: "All sauces retrieved successfully",
-					sauces: notRequestedSauces,
+					sauces,
 				});
-			}
-		}
 
-		return res.status(400).json({
-			message:
-				// "type can only be 'favourite', 'checkedin', 'featured', 'toprated' or 'requested'",
-				"type can only be 'favourite', 'checkedin', 'featured' or 'toprated' ('requested' or 'all' for admin only)",
-		});
+			case "requested":
+				if (req.user.type !== "admin") {
+					return res.status(403).json({
+						message: "Access denied: Admins only",
+					});
+				}
+				sauces = await Sauce.find({ isRequested: true }).populate(
+					"owner"
+				);
+				return res.status(200).json({
+					message: "Requested sauces retrieved successfully",
+					sauces,
+				});
+			case "favourite":
+				const likes = await Like.find({ userId }).populate({
+					path: "sauceId",
+					populate: { path: "owner" },
+				});
+				sauces = likes.map((like) => like.sauceId);
+				return res.status(200).json({
+					message: "Liked sauces retrieved successfully",
+					sauces,
+				});
+
+			case "toprated":
+				sauces = await Sauce.find({ isRequested: false })
+					.sort({ views: -1 }) // Sort by view count in descending order
+					.limit(20) // Limit the results to the top 20
+					.populate("owner");
+				return res.status(200).json({
+					message: "Top Rated sauces retrieved successfully",
+					sauces,
+				});
+
+			case "featured":
+				sauces = await Sauce.find({
+					isFeatured: true,
+					isRequested: false,
+				}).populate("owner");
+				return res.status(200).json({
+					message: "Featured sauces retrieved successfully",
+					sauces,
+				});
+
+			case "checkedin":
+				//! Finish this when checkin logic is done
+				return res.status(200).json({
+					message: "Checked-in sauces retrieved successfully",
+					sauces: [], // Placeholder, update with actual data when ready
+				});
+
+			default:
+				return res.status(400).json({
+					message:
+						"Type can only be 'favourite', 'checkedin', 'featured', 'toprated' ('requested' or 'all' for admin only)",
+				});
+		}
 	} catch (error) {
-		return res
-			.status(400)
-			.json({ message: "Something went wrong while retrieving Sauces" });
+		console.log(error);
+		return res.status(400).json({
+			message: "Something went wrong while retrieving sauces",
+			error: error.message,
+		});
 	}
 };
+
+// const getSauces = async (req, res) => {
+// 	try {
+// 		const { type } = req.body;
+// 		const userId = req.user._id;
+
+// 		// get all sauces user has liked
+// 		if (type === "favourite") {
+// 			const likes = await Like.find({ userId }).populate("sauceId");
+// 			const likedSauces = likes.map((like) => like.sauceId);
+// 			return res.status(200).json({
+// 				message: "Liked sauces retrieved successfully",
+// 				sauces: likedSauces,
+// 			});
+// 		}
+// 		// get top 20 sauces with highest views
+// 		if (type === "toprated") {
+// 			const topRatedSauces = await Sauce.find({ isRequested: false })
+// 				.sort({ views: -1 }) // Sort by view count in descending order
+// 				.limit(20) // Limit the results to the top 20
+// 				.populate("owner");
+// 			return res.status(200).json({
+// 				message: "Top Rated sauces retrieved successfully",
+// 				sauces: topRatedSauces,
+// 			});
+// 		}
+// 		// get all featured sauces
+// 		if (type === "featured") {
+// 			const featuredSauces = await Sauce.find({
+// 				isFeatured: true,
+// 				isRequested: false,
+// 			}).populate("owner");
+// 			return res.status(200).json({
+// 				message: "Featured sauces retrieved successfully",
+// 				featured: featuredSauces,
+// 			});
+// 		}
+// 		// ignore this for now, checkin not being used
+// 		if (type === "checkedin") {
+// 			//! finish this when checkin logic is done
+// 			return res.status(200).json({
+// 				message: "Checked-in sauces retrieved successfully",
+// 				// sauces: likedSauces,
+// 			});
+// 		}
+// 		//! only admin should be able to get all sauces and get requested sauces
+// 		if (req.user.type === "admin") {
+// 			if (type === "requested") {
+// 				const requestedSauces = await Sauce.find({ isRequested: true });
+// 				return res.status(200).json({
+// 					message: "Requested sauces retrieved successfully",
+// 					sauces: requestedSauces,
+// 				});
+// 			}
+// 			if (type == "" || !type || type === "all") {
+// 				const notRequestedSauces = await Sauce.find({
+// 					isRequested: false,
+// 				}).populate('owner');
+// 				return res.status(200).json({
+// 					message: "All sauces retrieved successfully",
+// 					sauces: notRequestedSauces,
+// 				});
+// 			}
+// 		}
+
+// 		return res.status(400).json({
+// 			message:
+// 				// "type can only be 'favourite', 'checkedin', 'featured', 'toprated' or 'requested'",
+// 				"type can only be 'favourite', 'checkedin', 'featured' or 'toprated' ('requested' or 'all' for admin only)",
+// 		});
+// 	} catch (error) {
+// 		return res
+// 			.status(400)
+// 			.json({ message: "Something went wrong while retrieving Sauces" });
+// 	}
+// };
 
 module.exports = {
 	requestSauce,

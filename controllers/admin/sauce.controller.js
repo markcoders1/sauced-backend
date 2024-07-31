@@ -116,10 +116,6 @@ const toggleSauceFeaturedStatus = async (req, res) => {
 	}
 };
 
-// Top Rated sauces array
-
-// Featured Sauces array
-
 // Tope Rated Brands Array
 
 // Hot Sauce Map array
