@@ -7,7 +7,7 @@ const EventSchema = new mongoose.Schema(
 			required: true,
 		},
 		eventDetails: {
-			type: String, // bullet points
+			type: [String], // array of strings for bullet points
 			required: true,
 		},
 		eventDate: {
