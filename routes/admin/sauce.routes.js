@@ -4,6 +4,7 @@ const { upload } = require("../../middlewares/multer.middleware.js");
 const {
 	addSauce,
 	changeAnySauceImage,
+	toggleSauceFeaturedStatus,
 } = require("../../controllers/admin/sauce.controller.js");
 
 const adminRouter = express.Router();
@@ -11,5 +12,6 @@ adminRouter.use(adminMiddleware); // Apply admin middleware to all adminRouter (
 
 adminRouter.post("/add-sauce", upload.single("image"), addSauce);
 adminRouter.post("/change-sauce-image", upload.single("image"), changeAnySauceImage);
+adminRouter.post("/toggle-feature-sauce", toggleSauceFeaturedStatus)
 
 module.exports = adminRouter;

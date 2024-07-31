@@ -3,7 +3,6 @@ const User = require("../../models/user.model.js");
 const baseUrl = process.env.SERVER_BASE_URL || "/";
 const fs = require("fs");
 
-
 const addSauce = async (req, res) => {
 	try {
 		const { name, title, type, description, ingredients } = req.body;
@@ -75,7 +74,47 @@ const changeAnySauceImage = async (req, res) => {
 	}
 };
 
+const toggleSauceFeaturedStatus = async (req, res) => {
+	try {
+		const { sauceId } = req.body;
+		let sauce = await Sauce.findById(sauceId);
+		if (!sauce) {
+			return res.status(404).json({
+				message: "Sauce not found",
+			});
+		}
+		// Check if the isRequested flag is false
+		if (sauce.isRequested) {
+			return res.status(400).json({
+				message:
+					"Cannot toggle featured status while sauce is requested",
+			});
+		}
+		// Toggle the isFeatured flag using not gate !
+		sauce.isFeatured = !sauce.isFeatured;
 
+		// Save and populate the updated sauce object
+		await sauce.save();
+		await sauce.populate("owner");
+
+		// Determine the appropriate message using ternary operator instead of if-else cuz im fancy like that
+		const message = sauce.isFeatured
+			? "Sauce Added to Featured List Successfully"
+			: "Sauce Removed from Featured List Successfully";
+
+		return res.status(200).json({
+			message,
+			sauce,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(400).json({
+			message:
+				"Something went wrong while toggling sauce featured status",
+			error,
+		});
+	}
+};
 
 // Top Rated sauces array
 
@@ -91,8 +130,8 @@ const changeAnySauceImage = async (req, res) => {
 
 // makeSauceFeatured API
 
-
 module.exports = {
 	addSauce,
 	changeAnySauceImage,
+	toggleSauceFeaturedStatus,
 };

@@ -26,6 +26,10 @@
 // Done viewSauce API for when user clicks on a sauce and it opens the sauce with full details
 // Done getSauces API with images with a parameter to select featured or top rated sauces or favourite or checkin 
 
+
+// Done Comment Model Schema
+// Done API	create Comment,add Reply, get Comment With Replies, delete Comment,edit Comment,
+
 //ToDo
 
 // Checkin ... location?
@@ -76,6 +80,5 @@
 // replies array
  
 
-// ADD comment API
-// reply comment API? or make them same
+
 
