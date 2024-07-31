@@ -15,24 +15,24 @@ const CommentSchema = new Schema(
 		},
 		replies: [
 			{
-				type: Schema.Types.ObjectId,
-				ref: "comments",
+				user: {
+					type: Schema.Types.ObjectId,
+					ref: "users",
+					required: true,
+				},
+				text: {
+					type: String,
+					required: true,
+				},
+				createdAt: {
+					type: Date,
+					default: Date.now,
+				},
 			},
 		],
-		parentComment: {
-			type: Schema.Types.ObjectId,
-			ref: "comments",
-			default: null, // Used to track parent comment for replies
-		},
 	},
 	{ timestamps: true }
 );
-
-// Middleware to update the updatedAt field on save
-CommentSchema.pre("save", function (next) {
-	this.updatedAt = Date.now();
-	next();
-});
 
 module.exports = {
 	Comment: mongoose.model("comments", CommentSchema),
