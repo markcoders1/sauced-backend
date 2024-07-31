@@ -108,46 +108,86 @@ const getCommentWithReplies = async (req, res) => {
 
 // Delete a comment and its replies
 const deleteComment = async (req, res) => {
-    try {
-      const commentId = req.query.commentId; // Get commentId from query parameters
-      const comment = await Comment.findById(commentId);
-  
-      if (!comment) {
-        return res.status(404).json({ message: "Comment not found" });
-      }
-  
-      // Check if the current user is the owner of the comment
-      if (comment.user.toString() !== req.user._id.toString()) {
-        return res.status(403).json({ message: "You do not have permission to delete this comment" });
-      }
-  
-      // Recursively delete all replies
-      async function deleteReplies(commentId) {
-        const comment = await Comment.findById(commentId);
-        if (comment) {
-          for (const replyId of comment.replies) {
-            await deleteReplies(replyId);
-          }
-          await Comment.findByIdAndDelete(commentId);
-        }
-      }
-  
-      await deleteReplies(commentId);
-  
-      res.status(200).json({ message: "Comment and its replies deleted successfully" });
-    } catch (error) {
-      console.error("Error deleting comment:", error);
-      res.status(400).json({
-        message: "Something went wrong while deleting the comment",
-        error,
-      });
-    }
-  };
-  
+	try {
+		const commentId = req.query.commentId; // Get commentId from query parameters
+		const comment = await Comment.findById(commentId);
+
+		if (!comment) {
+			return res.status(404).json({ message: "Comment not found" });
+		}
+
+		// Check if the current user is the owner of the comment
+		if (comment.user.toString() !== req.user._id.toString()) {
+			return res.status(403).json({
+				message: "You do not have permission to delete this comment",
+			});
+		}
+
+		// Recursively delete all replies
+		async function deleteReplies(commentId) {
+			const comment = await Comment.findById(commentId);
+			if (comment) {
+				for (const replyId of comment.replies) {
+					await deleteReplies(replyId);
+				}
+				await Comment.findByIdAndDelete(commentId);
+			}
+		}
+
+		await deleteReplies(commentId);
+
+		res.status(200).json({
+			message: "Comment and its replies deleted successfully",
+		});
+	} catch (error) {
+		console.error("Error deleting comment:", error);
+		res.status(400).json({
+			message: "Something went wrong while deleting the comment",
+			error,
+		});
+	}
+};
+
+// Edit user comment or reply
+const editComment = async (req, res) => {
+	try {
+		const commentId = req.query.commentId;
+		const comment = await Comment.findById(commentId);
+
+		if (!comment) {
+			return res.status(404).json({ message: "Comment not found" });
+		}
+
+		// Check if the current user is the owner of the comment
+		if (comment.user.toString() !== req.user._id.toString()) {
+			return res.status(403).json({
+				message: "You do not have permission to edit this comment",
+			});
+		}
+
+		// Update the comment text
+		comment.text = req.body.text;
+		const updatedComment = await comment.save();
+
+		await updatedComment.populate("user", "name");
+
+		res.status(200).json({
+			message: "Comment Updated Successfully",
+			comment: updatedComment,
+		});
+	} catch (error) {
+		console.error("Error editing comment:", error);
+		res.status(400).json({
+			message: "Something went wrong while editing the comment",
+			error,
+		});
+	}
+};
 
 module.exports = {
 	createComment,
 	addReply,
 	getCommentWithReplies,
 	deleteComment,
+	editComment,
 };
