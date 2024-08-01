@@ -3,6 +3,34 @@ const { Follow } = require("../../models/follow.model.js");
 const { initializeAdmin } = require("../../services/firebase.js");
 const admin = initializeAdmin();
 
+const deactivateUser = async (req, res) => {
+	try {
+		const { email } = req.body;
+		if (!email)
+			return res.status(400).send({ message: "User email is required." });
+
+		const user = await User.findOne({ email: req.body.email });
+		if (!user) return res.status(404).send({ message: "User not found," });
+
+		// Deactivate the user in Firebase
+		const disabled = await admin
+			.auth()
+			.updateUser(user.uid, { disabled: true });
+
+		// Update the user's status to inactive in MongoDB
+		user.status = "inactive";
+		await user.save();
+
+		res.status(200).send({ message: "User has been deleted.", disabled });
+	} catch (error) {
+		console.log(error);
+		return res.status(400).json({
+			message: "Something went wrong while deleting user",
+			error,
+		});
+	}
+};
+
 const reactivateUser = async (req, res) => {
 	try {
 		const user = await User.findOne({ email: req.body.email });
@@ -60,4 +88,5 @@ const getAllUsers = async (req, res) => {
 module.exports = {
 	reactivateUser,
 	getAllUsers,
+	deactivateUser,
 };
