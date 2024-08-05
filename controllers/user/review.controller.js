@@ -9,7 +9,7 @@ const createReview = async (req, res) => {
 		if (!mongoose.isValidObjectId(sauceId)) {
 			return res.status(400).json({ message: "Invalid sauce id" });
 		}
-		if (![1, 2, 3, 4, 5].includes(star)) {
+		if (![0.5 ,1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].includes(star)) {
 			return res.status(400).json({
 				message: "star must be a number from 1 to 5",
 			});
