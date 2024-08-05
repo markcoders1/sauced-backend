@@ -1,5 +1,6 @@
 const User = require("../../models/user.model.js");
 const { Follow } = require("../../models/follow.model.js");
+const { Checkin } = require("../../models/checkin.model.js");
 const { initializeAdmin } = require("../../services/firebase.js");
 const admin = initializeAdmin();
 
@@ -49,32 +50,34 @@ const reactivateUser = async (req, res) => {
 		});
 	}
 };
-
-// get all users, along with following and follower count
 const getAllUsers = async (req, res) => {
 	try {
 		// Fetch all users
 		const users = await User.find({});
 
-		// Use Promise.all to fetch following and follower counts for each user in parallel
-		const usersWithFollowCounts = await Promise.all(
+		// Use Promise.all to fetch following, follower counts, and check-in counts for each user in parallel
+		const usersWithCounts = await Promise.all(
 			users.map(async (user) => {
 				const followingCount = await Follow.countDocuments({
 					followGiver: user._id,
 				});
 				const followersCount = await Follow.countDocuments({
-					followReciever: user._id,
+					followReceiver: user._id,
+				});
+				const checkinCount = await Checkin.countDocuments({
+					owner: user._id,
 				});
 				return {
 					...user._doc,
 					following: followingCount,
 					followers: followersCount,
+					checkins: checkinCount,
 				};
 			})
 		);
 
 		return res.status(200).send({
-			users: usersWithFollowCounts,
+			users: usersWithCounts,
 		});
 	} catch (error) {
 		console.log(error);
