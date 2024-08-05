@@ -9,7 +9,7 @@ const createReview = async (req, res) => {
 		if (!mongoose.isValidObjectId(sauceId)) {
 			return res.status(400).json({ message: "Invalid sauce id" });
 		}
-		if (![0.5 ,1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].includes(star)) {
+		if (![0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].includes(star)) {
 			return res.status(400).json({
 				message: "star must be a number from 1 to 5",
 			});
@@ -21,9 +21,9 @@ const createReview = async (req, res) => {
 			text: text,
 		});
 
-		const populatedReview = await Review.findById(review._id)
-			.populate("owner", "name email")
-			.populate("sauceId", "name title description ingredients image");
+		const populatedReview = await Review.findById(review._id).populate(
+			"owner sauceId"
+		);
 
 		return res.status(200).json({
 			message: "Review Created Successfully",
@@ -40,9 +40,9 @@ const createReview = async (req, res) => {
 const getUserReviews = async (req, res) => {
 	try {
 		const user = req.user;
-		const reviews = await Review.find({ owner: user._id })
-			.populate("owner", "name email")
-			.populate("sauceId", "name title description ingredients image");
+		const reviews = await Review.find({ owner: user._id }).populate(
+			"owner sauceId"
+		);
 		return res
 			.status(200)
 			.json({ message: "User Reviews fetched Successfully", reviews });
@@ -66,10 +66,7 @@ const updateReview = async (req, res) => {
 			{ _id: reviewId, owner: req.user._id },
 			{ star, text },
 			{ new: true }
-		)
-			.populate("owner", "name email")
-			.populate("sauceId", "name title description ingredients image");
-
+		).populate("owner sauceId");
 		if (!review) {
 			return res
 				.status(404)
@@ -92,10 +89,7 @@ const deleteReview = async (req, res) => {
 		const review = await Review.findOneAndDelete({
 			_id: reviewId,
 			owner: req.user._id,
-		})
-			.populate("owner", "name email")
-			.populate("sauceId", "name title description ingredients image");
-
+		}).populate("owner sauceId");
 		if (!review) {
 			return res.status(404).json({ message: "Review not found" });
 		}

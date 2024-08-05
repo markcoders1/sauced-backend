@@ -1,4 +1,5 @@
 const { Sauce, Like } = require("../../models/sauce.model.js");
+const { Checkin } = require("../../models/checkin.model.js");
 const User = require("../../models/user.model.js");
 const baseUrl = process.env.SERVER_BASE_URL || "/";
 const fs = require("fs");
@@ -186,10 +187,13 @@ const getSauces = async (req, res) => {
 				});
 
 			case "checkedin":
-				//! Finish this when checkin logic is done
+				sauces = await Checkin.find({ owner: userId }).populate({
+					path: "sauceId",
+					populate: { path: "owner" },
+				});
 				return res.status(200).json({
 					message: "Checked-in sauces retrieved successfully",
-					sauces: [], // Placeholder, update with actual data when ready
+					sauces,
 				});
 
 			default:

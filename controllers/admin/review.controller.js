@@ -22,9 +22,7 @@ const deleteSpecificReview = async (req, res) => {
 // get all reviews
 const getAllReviews = async (req, res) => {
 	try {
-		const reviews = await Review.find()
-			.populate("owner", "name email")
-			.populate("sauceId", "name title description ingredients image");
+		const reviews = await Review.find().populate("owner sauceId");
 		return res.status(200).json({ reviews });
 	} catch (error) {
 		console.log(error);
