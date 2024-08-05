@@ -1,22 +1,18 @@
 const mongoose = require("mongoose");
 const { Schema } = require("mongoose");
 
-const ReviewSchema = new Schema(
+const CheckinSchema = new Schema(
 	{
 		owner: {
-			// the person writing a review
+			// the person checking in
 			type: Schema.Types.ObjectId,
 			ref: "users",
+			required: true,
 		},
 		sauceId: {
-			// the sauce being reviewed
+			// the sauce being checkin
 			type: Schema.Types.ObjectId,
 			ref: "sauces",
-		},
-		star: {
-			// (1|2|3|4|5 | 0.5 | 1.5 | 2.5 | 3.5 | 4.5)
-			type: Number,
-			default: 5,
 			required: true,
 		},
 		text: {
@@ -24,10 +20,20 @@ const ReviewSchema = new Schema(
 			required: true,
 			trim: true,
 		},
+		location: {
+			longitude: String,
+			latitude: String,
+		},
+		images: [
+			{
+				type: String,
+				trim: true,
+			},
+		],
 	},
 	{ timestamps: true }
 );
 
 module.exports = {
-	Review: mongoose.model("reviews", ReviewSchema),
+	Checkin: mongoose.model("checkins", CheckinSchema),
 };

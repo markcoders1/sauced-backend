@@ -25,6 +25,7 @@ const followRouter = require("./routes/user/follow.routes.js");
 const sauceRouter = require("./routes/user/sauce.routes.js");
 const reviewRouter = require("./routes/user/review.routes.js");
 const commentRouter = require("./routes/user/comment.routes.js");
+const checkinRouter = require("./routes/user/checkin.routes.js");
 
 //Admin Routes
 const adminAuthRouter = require("./routes/admin/auth.routes.js");
@@ -32,6 +33,7 @@ const adminSauceRouter = require("./routes/admin/sauce.routes.js");
 const adminReviewRouter = require("./routes/admin/review.routes.js");
 const adminProfileRouter = require("./routes/admin/profile.routes.js");
 const adminEventRouter = require("./routes/admin/event.routes.js");
+const adminCheckinRouter = require("./routes/admin/checkin.routes.js");
 
 //routes usage
 //admin
@@ -40,6 +42,7 @@ app.use("/api/admin", adminSauceRouter);
 app.use("/api/admin", adminReviewRouter);
 app.use("/api/admin", adminProfileRouter);
 app.use("/api/admin", adminEventRouter);
+app.use("/api/admin", adminCheckinRouter);
 
 //user
 app.use("/api/auth", authRouter);
@@ -48,6 +51,7 @@ app.use("/api", followRouter);
 app.use("/api", sauceRouter);
 app.use("/api", reviewRouter);
 app.use("/api", commentRouter);
+app.use("/api", checkinRouter);
 
 app.use("*", (req, res) =>
 	res.status(404).json({ error: "route not found", code: 404 })
