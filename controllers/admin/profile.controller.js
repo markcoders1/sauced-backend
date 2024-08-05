@@ -50,6 +50,43 @@ const reactivateUser = async (req, res) => {
 		});
 	}
 };
+
+const blockUnblockUser = async (req, res) => {
+	//basically toggle between deactivate user and reactivate user
+	try {
+		const { email } = req.body;
+		if (!email)
+			return res.status(400).send({ message: "User email is required." });
+
+		const user = await User.findOne({ email });
+		if (!user) return res.status(404).send({ message: "User not found," });
+
+		const newStatus = user.status === "active" ? "inactive" : "active";
+		const disabled = newStatus === "inactive";
+
+		// Update the user's status in Firebase
+		const updatedUser = await admin
+			.auth()
+			.updateUser(user.uid, { disabled });
+
+		// Update the user's status in MongoDB
+		user.status = newStatus;
+		await user.save();
+
+		const action = disabled ? "deactivated" : "reactivated";
+		res.status(200).send({
+			message: `User has been ${action}.`,
+			user: updatedUser,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({
+			message: "Something went wrong while toggling user status",
+			error,
+		});
+	}
+};
+
 const getAllUsers = async (req, res) => {
 	try {
 		// Fetch all users
@@ -92,4 +129,5 @@ module.exports = {
 	reactivateUser,
 	getAllUsers,
 	deactivateUser,
+	blockUnblockUser,
 };
