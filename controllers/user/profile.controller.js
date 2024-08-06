@@ -101,6 +101,7 @@ const getUser = async (req,res) => {
                 ...user._doc,
                 following,
                 followers,
+                //! and include user's checkin count as well
             }})
     } catch (error) {
         res.status(500).json({

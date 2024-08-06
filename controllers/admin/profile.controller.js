@@ -89,8 +89,15 @@ const blockUnblockUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
 	try {
-		// Fetch all users
-		const users = await User.find({});
+		const { type } = req.query;
+
+		let query = {};
+		if (type) {
+			query.type = type; // Filter by user type if provided
+		}
+
+		// Fetch users based on query
+		const users = await User.find(query);
 
 		// Use Promise.all to fetch following, follower counts, and check-in counts for each user in parallel
 		const usersWithCounts = await Promise.all(
@@ -119,7 +126,7 @@ const getAllUsers = async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		res.status(500).json({
-			message: "Something went wrong while getting all users",
+			message: "Something went wrong while getting users",
 			error,
 		});
 	}
