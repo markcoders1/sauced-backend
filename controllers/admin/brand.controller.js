@@ -1,16 +1,8 @@
-// Tope Rated Brands Array
-
-// Hot Sauce Map array
-
-// search for specific sauce
-
-// search for specific brand ( return all sauces of a brand )
 const { initializeAdmin } = require("../../services/firebase.js");
 const admin = initializeAdmin();
 const User = require("../../models/user.model.js");
 const { Sauce } = require("../../models/sauce.model.js");
 
-// Create a new brand user
 const createBrand = async (req, res) => {
 	try {
 		const { email, password, name, provider, image } = req.body;
@@ -60,7 +52,6 @@ const createBrand = async (req, res) => {
 	}
 };
 
-// Change a user's type to brand
 const changeUserToBrand = async (req, res) => {
 	try {
 		const { email } = req.body;
@@ -92,7 +83,6 @@ const changeUserToBrand = async (req, res) => {
 	}
 };
 
-// Get all sauces for a specific brand
 const getBrandSauces = async (req, res) => {
 	try {
 		const { brandId } = req.params;
@@ -104,7 +94,7 @@ const getBrandSauces = async (req, res) => {
 		}
 
 		// Find all sauces associated with this brand
-		const sauces = await Sauce.find({ owner: brandId });
+		const sauces = await Sauce.find({ owner: brandId }).populate("owner");
 
 		return res.status(200).json({
 			message: "Sauces retrieved successfully",
@@ -120,7 +110,6 @@ const getBrandSauces = async (req, res) => {
 	}
 };
 
-// Demote a brand to a regular user
 const demoteBrandToUser = async (req, res) => {
 	try {
 		const { email } = req.body;
@@ -156,6 +145,8 @@ const demoteBrandToUser = async (req, res) => {
 		});
 	}
 };
+
+// for editing Brand use editUser API
 
 module.exports = {
 	createBrand,
