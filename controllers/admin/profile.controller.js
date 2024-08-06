@@ -87,6 +87,51 @@ const blockUnblockUser = async (req, res) => {
 	}
 };
 
+const editUser = async (req, res) => {
+	try {
+		const {
+			email,
+			name,
+			type,
+			status,
+			image,
+			bannerImage,
+			provider,
+			points,
+		} = req.body;
+
+		if (!email) {
+			return res.status(400).json({ message: "User email is required" });
+		}
+
+		const user = await User.findOne({ email });
+		if (!user) {
+			return res.status(404).json({ message: "User not found" });
+		}
+
+		user.name = name || user.name;
+		user.type = type || user.type;
+		user.status = status || user.status;
+		user.image = image || user.image;
+		user.bannerImage = bannerImage || user.bannerImage;
+		user.provider = provider || user.provider;
+		user.points = points || user.points;
+
+		const updatedUser = await user.save();
+
+		return res.status(200).json({
+			message: "User updated successfully",
+			user: updatedUser,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({
+			message: "Something went wrong while updating user",
+			error,
+		});
+	}
+};
+
 const getAllUsers = async (req, res) => {
 	try {
 		const { type } = req.query;
@@ -137,4 +182,5 @@ module.exports = {
 	getAllUsers,
 	deactivateUser,
 	blockUnblockUser,
+	editUser,
 };
