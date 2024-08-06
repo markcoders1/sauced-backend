@@ -116,6 +116,55 @@ const toggleSauceFeaturedStatus = async (req, res) => {
 	}
 };
 
+const editSauce = async (req, res) => {
+	try {
+		const {
+			sauceId,
+			name,
+			title,
+			type,
+			description,
+			ingredients,
+			websiteLink,
+			productLink,
+		} = req.body;
+		if (!sauceId) {
+			return res.status(400).json({ message: "Sauce ID is required" });
+		}
+
+		let sauce = await Sauce.findById(sauceId);
+		if (!sauce) {
+			return res.status(404).json({ message: "Sauce not found" });
+		}
+
+		sauce.name = name || sauce.name;
+		sauce.title = title || sauce.title;
+		sauce.type = type || sauce.type;
+		sauce.description = description || sauce.description;
+		sauce.ingredients = ingredients || sauce.ingredients;
+		sauce.websiteLink = websiteLink || sauce.websiteLink;
+		sauce.productLink = productLink || sauce.productLink;
+
+		if (req.file) {
+			sauce.image = baseUrl + "uploads/" + req.file.filename;
+		}
+
+		const updatedSauce = await sauce.save();
+		await updatedSauce.populate("owner");
+
+		return res.status(200).json({
+			message: "Sauce Updated Successfully",
+			sauce: updatedSauce,
+		});
+	} catch (error) {
+		console.log(error);
+		return res.status(400).json({
+			message: "Something went wrong while updating sauce",
+			error,
+		});
+	}
+};
+
 // Tope Rated Brands Array
 
 // Hot Sauce Map array
@@ -130,4 +179,5 @@ module.exports = {
 	addSauce,
 	changeAnySauceImage,
 	toggleSauceFeaturedStatus,
+	editSauce,
 };
