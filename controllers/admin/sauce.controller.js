@@ -5,7 +5,9 @@ const fs = require("fs");
 
 const addSauce = async (req, res) => {
 	try {
-		const { name, title, type, description, ingredients } = req.body;
+		const { email, userId, name, title, type, description, ingredients } =
+			req.body;
+
 		if (!name) {
 			return res.status(400).json({ message: "Sauce name is required" });
 		}
@@ -17,13 +19,37 @@ const addSauce = async (req, res) => {
 				.json({ message: "Image or Banner Image not found" });
 		}
 
-		const user = await User.findOne({ email: req.user.email });
+		let user;
+		if (email) {
+			user = await User.findOne({ email });
+		} else if (userId) {
+			user = await User.findById(userId);
+		} else {
+			return res
+				.status(400)
+				.json({
+					message:
+						"Either email or userId is required to identify the owner.",
+				});
+		}
+
+		if (!user) {
+			return res.status(404).json({ message: "User not found" });
+		}
+
+		// Ensure the user is a brand
+		if (user.type !== "brand") {
+			return res
+				.status(400)
+				.json({ message: "User must be a brand to add a sauce" });
+		}
+
 		const sauce = await Sauce.create({
 			isRequested: false,
 			title: title,
 			name: name,
 			type: type,
-			owner: user.id,
+			owner: user._id,
 			description: description,
 			ingredients: ingredients,
 			image: baseUrl + "uploads/" + req.files.image[0].filename,
@@ -142,13 +168,3 @@ module.exports = {
 	toggleSauceFeaturedStatus,
 	editSauce,
 };
-
-// Tope Rated Brands Array
-
-// Hot Sauce Map array
-
-// search for specific sauce
-
-// search for specific brand ( return all sauces of a brand )
-
-// makeSauceFeatured API

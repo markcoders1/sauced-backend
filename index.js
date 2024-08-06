@@ -36,6 +36,7 @@ const adminReviewRouter = require("./routes/admin/review.routes.js");
 const adminProfileRouter = require("./routes/admin/profile.routes.js");
 const adminEventRouter = require("./routes/admin/event.routes.js");
 const adminCheckinRouter = require("./routes/admin/checkin.routes.js");
+const adminBrandRouter = require("./routes/admin/brand.router.js");
 
 //routes usage
 //admin
@@ -45,6 +46,7 @@ app.use("/api/admin", adminReviewRouter);
 app.use("/api/admin", adminProfileRouter);
 app.use("/api/admin", adminEventRouter);
 app.use("/api/admin", adminCheckinRouter);
+app.use("/api/admin", adminBrandRouter);
 
 //user
 app.use("/api/auth", authRouter);
