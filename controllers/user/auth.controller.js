@@ -84,7 +84,22 @@ const webhook = (req, res) => {
         });
     }
 };
+
+const test1 = (req, res) => {
+    try {
+        console.log("test");
+        res.status(200).send({ message: "test received successfully" });
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({
+            message: "Something went wrong :(",
+            error,
+        });
+    }
+};
+
 module.exports = {
     webhook,
     firebaseAuth,
+    test1,
 };
