@@ -38,6 +38,9 @@ const SauceSchema = new Schema(
 		image: {
 			type: String,
 		},
+		bannerImage: {
+			type: String,
+		},
 		views: {
 			type: Number,
 			default: 0,
