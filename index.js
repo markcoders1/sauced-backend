@@ -11,7 +11,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-	res.send("Hello World!");
+	res.send(
+		"You are a saucy boy - William Shakespeare (Romeo and Juliet, 1597)"
+	);
 });
 
 // very important for file uploads
