@@ -82,3 +82,9 @@
 
 
 
+// get all events  image, events k model me picture
+// get events me bhi image 
+// add event image 
+// add sauce me dono links add karo
+
+// block unblock using id only

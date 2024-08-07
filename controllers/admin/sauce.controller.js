@@ -5,8 +5,17 @@ const fs = require("fs");
 
 const addSauce = async (req, res) => {
 	try {
-		const { email, userId, name, title, type, description, ingredients } =
-			req.body;
+		const {
+			email,
+			userId,
+			name,
+			title,
+			type,
+			description,
+			ingredients,
+			productLink,
+			websiteLink,
+		} = req.body;
 
 		if (!name) {
 			return res.status(400).json({ message: "Sauce name is required" });
@@ -25,12 +34,10 @@ const addSauce = async (req, res) => {
 		} else if (userId) {
 			user = await User.findById(userId);
 		} else {
-			return res
-				.status(400)
-				.json({
-					message:
-						"Either email or userId is required to identify the owner.",
-				});
+			return res.status(400).json({
+				message:
+					"Either email or userId is required to identify the owner.",
+			});
 		}
 
 		if (!user) {
@@ -52,6 +59,8 @@ const addSauce = async (req, res) => {
 			owner: user._id,
 			description: description,
 			ingredients: ingredients,
+			productLink: productLink,
+			websiteLink: websiteLink,
 			image: baseUrl + "uploads/" + req.files.image[0].filename,
 			bannerImage:
 				baseUrl + "uploads/" + req.files.bannerImage[0].filename,
