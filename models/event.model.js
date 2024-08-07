@@ -31,7 +31,9 @@ const EventSchema = new mongoose.Schema(
 			longitude: String,
 			latitude: String,
 		},
-		//bannerImage
+		bannerImage: {
+			type: String,
+		},
 	},
 	{ timestamps: true }
 );

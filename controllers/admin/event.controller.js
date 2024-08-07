@@ -1,12 +1,15 @@
 const { Event } = require("../../models/event.model.js");
 const User = require("../../models/user.model.js");
+const baseUrl = process.env.SERVER_BASE_URL || "/";
+const fs = require("fs");
 
 const addEvent = async (req, res) => {
 	try {
-		if (req.user.type != "admin")
+		if (req.user.type != "admin") {
 			return res.status(401).send({ message: "Access denied." });
+		}
 
-		let {
+		const {
 			eventName,
 			eventDetails,
 			eventDate,
@@ -16,32 +19,31 @@ const addEvent = async (req, res) => {
 			venueLocation,
 		} = req.body;
 
-		// if (!owner) {
-		// 	owner = req.user._id; //if req.body me owner ki field ni to req.user se lelo
-		// }
+		if (!req.file) {
+            console.log("Banner Image not found");
+            return res.status(400).json({ message: "Banner Image not found" });
+        }
 
-		// let owner = req.user._id;
-
-		let event = new Event({
+		const event = new Event({
 			eventName: eventName,
 			eventDetails: eventDetails,
 			eventDate: eventDate,
-			owner: owner,
+			owner: owner || req.user._id,
 			venueName: venueName,
 			venueDescription: venueDescription,
 			venueLocation: venueLocation,
+			bannerImage: baseUrl + "uploads/" + req.file.filename,
 		});
 
 		await event.save();
 
 		await event.populate("owner", "name");
-		// console.log(event);
 
 		return res
 			.status(200)
-			.json({ message: "Event Added Successfully ", event });
+			.json({ message: "Event Added Successfully", event });
 	} catch (error) {
-		console.log(error);
+		console.log("Error adding event:", error);
 		return res
 			.status(400)
 			.json({ message: "Something went wrong while adding event" });
