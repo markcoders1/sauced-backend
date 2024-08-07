@@ -50,16 +50,15 @@ const reactivateUser = async (req, res) => {
 		});
 	}
 };
-
 const blockUnblockUser = async (req, res) => {
-	//basically toggle between deactivate user and reactivate user
+	// Basically toggle between deactivate user and reactivate user
 	try {
-		const { email } = req.body;
-		if (!email)
-			return res.status(400).send({ message: "User email is required." });
+		const { userId } = req.body;
+		if (!userId)
+			return res.status(400).send({ message: "userId is required." });
 
-		const user = await User.findOne({ email });
-		if (!user) return res.status(404).send({ message: "User not found," });
+		const user = await User.findById(userId);
+		if (!user) return res.status(404).send({ message: "User not found." });
 
 		const newStatus = user.status === "active" ? "inactive" : "active";
 		const disabled = newStatus === "inactive";
