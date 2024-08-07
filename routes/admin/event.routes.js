@@ -18,6 +18,6 @@ adminRouter.post("/add-event", upload.single("bannerImage"), addEvent);
 adminRouter.delete("/delete-event", deleteEvent);
 adminRouter.get("/get-event", getEvent);
 adminRouter.get("/get-all-events", getAllEvents);
-adminRouter.put("/update-event", updateEvent);
+adminRouter.put("/update-event", upload.single("bannerImage"), updateEvent);
 
 module.exports = adminRouter;

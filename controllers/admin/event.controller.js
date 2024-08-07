@@ -20,9 +20,9 @@ const addEvent = async (req, res) => {
 		} = req.body;
 
 		if (!req.file) {
-            console.log("Banner Image not found");
-            return res.status(400).json({ message: "Banner Image not found" });
-        }
+			console.log("Banner Image not found");
+			return res.status(400).json({ message: "Banner Image not found" });
+		}
 
 		const event = new Event({
 			eventName: eventName,
@@ -137,6 +137,10 @@ const updateEvent = async (req, res) => {
 		event.venueName = venueName || event.venueName;
 		event.venueDescription = venueDescription || event.venueDescription;
 		event.venueLocation = venueLocation || event.venueLocation;
+
+		if (req.file) {
+			event.bannerImage = baseUrl + "uploads/" + req.file.filename;
+		}
 
 		await event.save();
 		return res
