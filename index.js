@@ -3,11 +3,13 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 const cors = require("cors");
+const morgan = require("morgan");
 //uncomment the following line to connect to the database, make sure to have the .env file with the correct values
 const { connect } = require("./config/Database");
 connect();
 
 app.use(express.json());
+app.use(morgan("tiny"));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
