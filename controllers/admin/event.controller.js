@@ -41,7 +41,7 @@ const addEvent = async (req, res) => {
 
 		await event.save();
 
-		await event.populate("owner", "name");
+		await event.populate("owner");
 
 		return res
 			.status(200)
