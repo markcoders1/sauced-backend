@@ -10,10 +10,10 @@ const EventSchema = new mongoose.Schema(
 			type: [String], // array of strings for bullet points
 			required: true,
 		},
-		eventDate: {
-			type: String,
-			required: true,
-		},
+        eventDate: {
+            type: Number, // Unix timestamp
+            required: true,
+        },
 		owner: {
 			type: mongoose.Schema.ObjectId, // which brand is hosting event
 			ref: "users",
