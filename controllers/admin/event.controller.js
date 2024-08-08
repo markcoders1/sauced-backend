@@ -16,7 +16,8 @@ const addEvent = async (req, res) => {
 			owner,
 			venueName,
 			venueDescription,
-			venueLocation,
+			"venueLocation.longitude": longitude,
+			"venueLocation.latitude": latitude,
 		} = req.body;
 
 		if (!req.file) {
@@ -31,7 +32,10 @@ const addEvent = async (req, res) => {
 			owner: owner || req.user._id,
 			venueName: venueName,
 			venueDescription: venueDescription,
-			venueLocation: venueLocation,
+			venueLocation: {
+				longitude: longitude,
+				latitude: latitude,
+			},
 			bannerImage: baseUrl + "uploads/" + req.file.filename,
 		});
 
