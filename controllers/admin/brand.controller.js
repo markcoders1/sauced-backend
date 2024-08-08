@@ -1,11 +1,12 @@
 const { initializeAdmin } = require("../../services/firebase.js");
 const admin = initializeAdmin();
 const User = require("../../models/user.model.js");
+const baseUrl = process.env.SERVER_BASE_URL || "/";
 const { Sauce } = require("../../models/sauce.model.js");
 
 const createBrand = async (req, res) => {
 	try {
-		const { email, password, name, provider, image } = req.body;
+		const { email, password, name, provider } = req.body;
 
 		if (!email || !password || !name) {
 			return res
@@ -21,6 +22,11 @@ const createBrand = async (req, res) => {
 				.json({ message: "User with this email already exists." });
 		}
 
+		if (!req.file) {
+			console.log("Image not found");
+			return res.status(400).json({ message: "Image not found" });
+		}
+
 		// Create a new user in Firebase Authentication
 		const firebaseUser = await admin.auth().createUser({
 			email: email,
@@ -33,7 +39,7 @@ const createBrand = async (req, res) => {
 			name,
 			email,
 			provider,
-			image,
+			image: baseUrl + "uploads/" + req.file.filename,
 			type: "brand",
 			status: "active",
 		});
