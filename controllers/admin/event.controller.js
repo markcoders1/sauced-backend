@@ -86,7 +86,7 @@ const deleteEvent = async (req, res) => {
 const getEvent = async (req, res) => {
 	try {
 		const { eventId } = req.body;
-		const event = await Event.findById(eventId).populate("owner", "name");
+		const event = await Event.findById(eventId).populate("owner");
 		if (!event) {
 			return res.status(404).json({ message: "Event not found." });
 		}
@@ -101,7 +101,7 @@ const getEvent = async (req, res) => {
 
 const getAllEvents = async (req, res) => {
 	try {
-		const events = await Event.find().populate("owner", "name");
+		const events = await Event.find().populate("owner");
 		return res.status(200).json({ events });
 	} catch (error) {
 		console.log(error);
@@ -116,6 +116,7 @@ const updateEvent = async (req, res) => {
 		if (req.user.type !== "admin") {
 			return res.status(401).send({ message: "Access denied." });
 		}
+
 		const {
 			eventId,
 			eventName,
@@ -123,7 +124,8 @@ const updateEvent = async (req, res) => {
 			eventDate,
 			venueName,
 			venueDescription,
-			venueLocation,
+			"venueLocation.longitude": longitude,
+			"venueLocation.latitude": latitude,
 		} = req.body;
 
 		if (!eventId) {
@@ -134,19 +136,27 @@ const updateEvent = async (req, res) => {
 		if (!event) {
 			return res.status(404).json({ message: "Event not found." });
 		}
+
 		// Update the event fields
 		event.eventName = eventName || event.eventName;
 		event.eventDetails = eventDetails || event.eventDetails;
 		event.eventDate = eventDate || event.eventDate;
 		event.venueName = venueName || event.venueName;
 		event.venueDescription = venueDescription || event.venueDescription;
-		event.venueLocation = venueLocation || event.venueLocation;
+
+		if (longitude && latitude) {
+			event.venueLocation = {
+				longitude: longitude,
+				latitude: latitude,
+			};
+		}
 
 		if (req.file) {
 			event.bannerImage = baseUrl + "uploads/" + req.file.filename;
 		}
 
 		await event.save();
+		await event.populate("owner");
 		return res
 			.status(200)
 			.json({ message: "Event updated successfully", event });
